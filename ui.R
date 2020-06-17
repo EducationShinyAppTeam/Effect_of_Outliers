@@ -2,7 +2,9 @@ library(shinydashboard)
 library(shiny)
 library(shinyBS)
 library(shinyjs)
+library(shinyWidgets)
 library(formattable)
+
 sliderInput2 <- function(inputId, label, min, max, value, step=NULL, from_min, from_max){
   x <- sliderInput(inputId, label, min, max, value, step)
   x$children[[2]]$attribs <- c(x$children[[2]]$attribs, 
