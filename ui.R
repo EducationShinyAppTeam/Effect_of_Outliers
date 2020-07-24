@@ -135,7 +135,8 @@ shinyUI(
           fluidRow(
             column(
               width = 6,
-              plotOutput("boxPlot"),
+              plotOutput(outputId = "boxPlot"),
+              # Alt text
               tags$script(HTML(
                 "$(document).ready(function() 
                        { document.getElementById('boxPlot').
@@ -146,17 +147,18 @@ shinyUI(
               ),
             column(
               width = 6,
-              plotOutput("hisPlot"),
+              plotOutput(outputId = "histplot"),
               bsPopover(
-                id = "hisPlot",
+                id = "histplot",
                 title = "Line info",
                 content = "Blue line for median and red line for mean.",
                 trigger = "hover",
                 placement = "top"
                 ),
+              # Alt text
               tags$script(HTML(
                 "$(document).ready(function() 
-                       { document.getElementById('hisPlot').
+                       { document.getElementById('histplot').
                        setAttribute('aria-label',
                        `Shows Histogram interacting with the sliderInput`)
                        })"
@@ -164,8 +166,8 @@ shinyUI(
               )
             ), 
           p(strong("Sample Statistics "), align = 'center'),
-          p(tableOutput("values")),
-          p(tableOutput("values2"))
+          p(tableOutput(outputId = "values")), # mean and sd
+          p(tableOutput(outputId = "values2")) # Five numbers
         ),
         tabItem(
           tabName = "References",
