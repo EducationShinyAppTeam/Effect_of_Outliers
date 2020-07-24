@@ -135,7 +135,7 @@ shinyUI(
           fluidRow(
             column(
               width = 6,
-              plotOutput(outputId = "boxPlot"),
+              plotOutput(outputId = "boxPlot", width = '100%'),
               # Alt text
               tags$script(HTML(
                 "$(document).ready(function() 
@@ -147,7 +147,7 @@ shinyUI(
               ),
             column(
               width = 6,
-              plotOutput(outputId = "histplot"),
+              plotOutput(outputId = "histplot", width = '100%'),
               bsPopover(
                 id = "histplot",
                 title = "Line info",
