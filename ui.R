@@ -11,7 +11,7 @@ shinyUI(
     skin = "yellow", 
     dashboardHeader(
       titleWidth = 250, 
-      title = "Effect of Outlier", 
+      title = "Effects of an Outlier", 
       tags$li(class="dropdown", 
               actionLink("info", icon("info"), class="myClass")), 
       tags$li(class='dropdown', 
@@ -22,7 +22,7 @@ shinyUI(
       sidebarMenu(id="tabs", 
         menuItem("Overview", tabName = "overview",icon = icon("dashboard")), 
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")), 
-        menuItem("Reference", tabName = "References", icon = icon("leanpub"))
+        menuItem("References", tabName = "References", icon = icon("leanpub"))
       ), 
       tags$div(class = "sidebar-logo", 
                boastUtils::psu_eberly_logo("reversed"))
@@ -36,17 +36,18 @@ shinyUI(
         # First tab content
         tabItem(
           tabName = "overview", 
-          h1("Effects of Outliers"), 
           #Title
-          p("In this App, you will observe the effect of outliers
-            on both histograms and boxplots."), 
+          h1("Effects of Outliers"), 
+          p("In this app, you will observe the effects of an outlier 
+             on histograms, boxplots, and summary statistics."), 
           br(), 
           h2("Instructions"), 
           tags$ol(
             tags$li("Specify  Population Mean, Standard Deviation,
                     and the Sample Size n."), 
             tags$li("Change the value of the movable point 
-                    to see how it affects the Histogram & Boxplot.")
+                    to see how it affects the histogram, the boxplot, 
+                    and the summary statistics.")
           ), 
           div(
             style = "text-align:center", 
@@ -75,7 +76,7 @@ shinyUI(
         # Second tab content
         tabItem(
           tabName = "explore", 
-          h2('Explore the Effects of Outlier'), 
+          h2('Explore the Effects of an Outlier'), 
           fluidRow(
             column(
               width = 4, 
@@ -143,7 +144,8 @@ shinyUI(
               ))
               )
             ), 
-          h3("Sample Statistics", align = 'center'), 
+          br(), 
+          h3("Summary Statistics for the Sample", align = 'center'), 
           DT::DTOutput(outputId = "values") # mean, sd, and five numbers
         ), 
         tabItem(

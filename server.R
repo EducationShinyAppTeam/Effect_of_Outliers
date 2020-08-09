@@ -12,7 +12,8 @@ shinyServer(function(session, input,output){
       title = "Instructions:", 
       text = "Specify  Population Mean, Standard Deviation, 
       and the Sample Size n", 
-      type = "info"
+      type = "info", 
+      width = "60%"
     )
   })
   # You will need to first add whichever palette line from above to your code
@@ -31,13 +32,13 @@ shinyServer(function(session, input,output){
       ggplot(data = data.frame(data0 = dataset2), 
              mapping = aes(x = 0, y = data0)) + 
         geom_boxplot(width = 0.3, col = "black", fill = "#E69F00") + 
-        labs(title = "Boxplot", x = 'x', y = 'outlier value') +
+        labs(title = "Boxplot", x = 'X', y = 'Value') + 
         geom_point(mapping = aes(x = 0, y = data0[1]), size = 4) + 
         theme(
-          plot.title = element_text(hjust = 0.5), # move title to center
-          panel.background = element_blank(), # remove background
-          axis.line = element_line(colour = "black"), # make axis line black
-          plot.caption = element_text(size = 18), # change the text size 
+          plot.title = element_text(hjust = 0.5),  # move title to center
+          panel.background = element_blank(),  # remove background
+          axis.line = element_line(colour = "black"),  # make axis line black
+          plot.caption = element_text(size = 18),  # change the text size 
           text = element_text(size = 18) # change the text size 
         )
     })
@@ -45,9 +46,9 @@ shinyServer(function(session, input,output){
     output$histplot <- renderPlot({
       dataset2 <- c(input$outlier, dataset)
       ggplot(data = data.frame(x = dataset2), mapping = aes(x = x)) + 
-        geom_histogram(binwidth = 1, boundary = 0, col = "black",
+        geom_histogram(binwidth = 1, boundary = 0, col = "black", 
                        fill = "#E69F00") + 
-        labs(title = "Histogram", x = 'outlier value', y = 'frenquency') +
+        labs(title = "Histogram", x = 'Value', y = 'Frequency') + 
         # mean value line
         geom_vline(aes(xintercept = mean(x), color = "mean"), size = 3) + 
         # median value line
@@ -62,8 +63,7 @@ shinyServer(function(session, input,output){
           panel.background = element_blank(), # remove background
           axis.line = element_line(colour = "black"), # make axis line black
           plot.caption = element_text(size = 18), # change the text size 
-          text = element_text(size = 18) # change the text size 
-          #legend.position = "bottom" # change the legend position
+          text = element_text(size = 18) # change the text size
         )
     })
     # build dataframe for the values - mean, sd, and five numbers
@@ -78,16 +78,16 @@ shinyServer(function(session, input,output){
         Q3 = (as.character(round(quantile(dataset2,3/4), digits = 1))), 
         max = (as.character(round(max(dataset2), digits = 1))), 
         stringsAsFactors = FALSE)
-    },
-    caption = "Statistic Summary", # Add a caption to your table
-    style = "bootstrap4", # You must use this style
-    rownames = FALSE,
+    }, 
+    style = "bootstrap4",  # You must use this style
+    rownames = FALSE, 
     options = list(
-      responsive = TRUE,
-      scrollX = TRUE,
-      paging = FALSE, # Set to False for small tables
-      searching = FALSE, # Set to False to turn of the search bar
-      ordering = FALSE
+      responsive = TRUE, 
+      scrollX = TRUE, 
+      paging = FALSE,  # Set to False for small tables
+      searching = FALSE,  # Set to False to turn of the search bar
+      ordering = FALSE, 
+      dom = 't' # Remove 'showing 1 to 1 of 1 entries' element
     )
    )
   })
