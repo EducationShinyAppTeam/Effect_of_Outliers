@@ -1,0 +1,326 @@
+# Library Calls----
+library(shinydashboard)
+library(shiny)
+library(shinyBS)
+library(shinyWidgets)
+library(boastUtils)
+library(ggplot2)
+library(DT)
+
+## App Meta Data----------------------------------------------------------------
+APP_TITLE <<- "Effect of Outliers"
+APP_DESCP  <<- paste(
+  "This app provides an opportunity to examine the impact of an outlier on",
+  "the values of various descriptive statistics, a boxplot, and a histogram."
+)
+## End App Meta Data------------------------------------------------------------
+
+# Define global constants and functions ----
+
+# Define the UI ----
+ui <- list(
+  dashboardPage(
+    skin = "yellow",
+    dashboardHeader(
+      titleWidth = 250,
+      title = "Effects of an Outlier",
+      tags$li(class="dropdown",
+              actionLink("info", icon("info"), class="myClass")),
+      tags$li(class='dropdown',
+              tags$a(href="https://shinyapps.science.psu.edu/",
+                     icon('home', lib='font-awesome')))),
+    dashboardSidebar(
+      width = 250,
+      sidebarMenu(
+        id="tabs",
+        menuItem("Overview", tabName = "overview",icon = icon("tachometer-alt")),
+        menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
+        menuItem("References", tabName = "References", icon = icon("leanpub"))
+      ),
+      tags$div(class = "sidebar-logo",
+               boastUtils::psu_eberly_logo("reversed"))
+    ),
+    dashboardBody(
+      tabItems(
+        # First tab content
+        tabItem(
+          tabName = "overview",
+          #Title
+          h1("Effects of Outliers"),
+          p("In this app, you will observe the effects of an outlier
+             on histograms, boxplots, and summary statistics."),
+          br(),
+          h2("Instructions"),
+          tags$ol(
+            tags$li("Specify  Population Mean, Standard Deviation,
+                    and the Sample Size n."),
+            tags$li("Change the value of the movable point
+                    to see how it affects the histogram, the boxplot,
+                    and the summary statistics.")
+          ),
+          div(
+            style = "text-align:center",
+            bsButton(
+              inputId = "go",
+              label = "GO!",
+              icon("bolt"),
+              size = "large",
+            )
+          ),
+          #Acknowledgements
+          br(),
+          br(),
+          h2("Acknowledgements"),
+          p(
+            "This app was originally developed and coded by Caihui Xiao
+            and Sitong Liu in June 2017. The was further updated by
+            Zhiliang Zhang and Jiajun Gao in June 2018,
+            and Ruisi Wang in June 2019, and Daehoon Gwak in July 2020.",
+            br(),
+            br(),
+            br(),
+            div(class = "updated", "Last Update: 7/31/2020 by DG.")
+          )
+        ),
+        # Second tab content
+        tabItem(
+          tabName = "explore",
+          h2('Explore the Effects of an Outlier'),
+          fluidRow(
+            column(
+              width = 4,
+              sliderInput(
+                inputId = "sampleSize",
+                label = "Sample Size",
+                min = 0,
+                max = 100,
+                value = 50,
+                step = 1
+              )
+            ),
+            column(
+              width = 4,
+              sliderInput(
+                inputId = "mean",
+                label = "Population Mean",
+                min = -10,
+                max = 10,
+                value = 0
+              )
+            ),
+            column(
+              width = 4,
+              sliderInput(
+                inputId = "sd",
+                label = "Population Standard Deviation",
+                min = 0,
+                max = 10,
+                value = 2
+              )
+            )
+          ),
+          sliderInput(
+            inputId = "outlier",
+            label = "Move the outlier (black dot)",
+            min = -50,
+            max = 50,
+            value = 0,
+            animate = animationOptions(interval = 1000, loop = FALSE)
+          ),
+          fluidRow(
+            column(
+              width = 6,
+              plotOutput(outputId = "boxPlot", width = '100%'),
+              # Alt text
+              tags$script(HTML(
+                "$(document).ready(function()
+                       { document.getElementById('boxPlot').
+                       setAttribute('aria-label',
+                       `Shows Boxplot interacting with the sliderInput`)
+                       })"
+              ))
+            ),
+            column(
+              width = 6,
+              plotOutput(outputId = "histplot", width = '100%'),
+              # Alt text
+              tags$script(HTML(
+                "$(document).ready(function()
+                       { document.getElementById('histplot').
+                       setAttribute('aria-label',
+                       `Shows Histogram interacting with the sliderInput`)
+                       })"
+              ))
+            )
+          ),
+          br(),
+          h3("Summary Statistics for the Sample", align = 'center'),
+          DT::DTOutput(outputId = "values") # mean, sd, and five numbers
+        ),
+        tabItem(
+          tabName = "References",
+          h2("References"),
+          p(     #shinyBS
+            class = "hangingindent",
+            "Bailey, E. (2015), shinyBS: Twitter bootstrap components for shiny,
+            R package. Available from
+            https://CRAN.R-project.org/package=shinyBS"
+          ),
+          p(     #Boast Utilities
+            class = "hangingindent",
+            "Carey, R. (2019), boastUtils: BOAST Utilities, R Package.
+            Available from
+            https://github.com/EducationShinyAppTeam/boastUtils"
+          ),
+          p(     #shinydashboard
+            class = "hangingindent",
+            "Chang, W. and Borges Ribeio, B. (2018), shinydashboard: Create
+            dashboards with 'Shiny', R Package. Available from
+            https://CRAN.R-project.org/package=shinydashboard"
+          ),
+          p(     #shiny
+            class = "hangingindent",
+            "Chang, W., Cheng, J., Allaire, J., Xie, Y., and McPherson, J.
+            (2019), shiny: Web application framework for R, R Package.
+            Available from https://CRAN.R-project.org/package=shiny"
+          ),
+          p(     #shinyWidgets
+            class = "hangingindent",
+            "Perrier, V., Meyer, F., Granjon, D., Fellows, I., and Davis, W.
+            (2020), shinyWidgets: Custom Inputs Widgets for Shiny, R package.
+            Available from
+            https://cran.r-project.org/web/packages/shinyWidgets/index.html"
+          ),
+          p(     #reference for ideas
+            class = "hangingindent",
+            "Statistical Applets - Mean and Median (n.d.), Available from
+          http://digitalfirst.bfwpub.com/stats_applet/generic_stats_applet_6_meanmed.html"
+          ),
+          p( # ggplot2
+            class = "hangingindent",
+            "Wickham, H., Chang, W., Henry, L., Pedersen, T.L., Takahashi, K.,
+            Wilke, C, Woo, K., Yutani, H., and Dunnington, D. (2020),
+            ggplot2: Create Elegant Data Visualisations Using the
+            Grammar of Graphics, R Package. Available from
+            https://cran.r-project.org/web/packages/ggplot2/index.html"
+          ),
+          p( # DT
+            class = "hangingindent",
+            "Xie, Y., Cheng, J., Tan, X., Allaire, J., Girlich, M., Ellis, G.F.,
+            and Rauh, J. (2020), DT: A Wrapper of the JavaScript Library
+            'DataTables', R Package. Available from
+            https://cran.r-project.org/web/packages/DT/index.html"
+          ),
+          br(),
+          br(),
+          br(),
+          boastUtils::copyrightInfo()
+        )
+      )
+    )
+  )
+)
+
+# Define the server ----
+server <- function(session, input,output){
+  # navigate to explore page
+  observeEvent(input$go,{
+    updateTabItems(session, "tabs", "explore")
+  })
+  # info button on the top right corner
+  observeEvent(input$info,{
+    sendSweetAlert(
+      session = session,
+      title = "Instructions:",
+      text = "Specify  Population Mean, Standard Deviation,
+      and the Sample Size n",
+      type = "info"
+    )
+  })
+  # You will need to first add whichever palette line from above to your code
+  # combine observeEvent since they all react to the sliderInput
+  observeEvent({input$sampleSize | input$mean | input$sd}, {
+    # rnorm: number of size = n, mean = mean, sd = sd
+    dataset <- round(rnorm(n = input$sampleSize-1, mean = input$mean,
+                           sd = input$sd), digits = 2)
+    dataset2 <- c(input$outlier, dataset)
+    # Boxplot
+    output$boxPlot <- renderPlot({
+      # dataset2 is the combination of the outlier from sliderInput & 'dataset'
+      ggplot(data = data.frame(data0 = dataset2),
+             mapping = aes(x = 0, y = data0)) +
+        geom_boxplot(width = 0.3, col = "black",
+                     fill = boastUtils::boastPalette[6]) +
+        geom_hline(aes(yintercept = mean(data0), color = "mean"), size = 1) +
+        geom_hline(aes(yintercept = median(data0), color = "median"), size = 1) +
+        labs(title = "Boxplot", x = NULL, y = 'Value') +
+        geom_point(mapping = aes(x = 0, y = data0[1]), size = 4) +
+        theme(
+          plot.title = element_text(hjust = 0.5),  # move title to center
+          panel.background = element_blank(),  # remove background
+          axis.line = element_line(colour = "black"),  # make axis line black
+          plot.caption = element_text(size = 18),  # change the text size
+          text = element_text(size = 18), # change the text size
+          legend.position = "none",
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()
+        ) +
+        scale_color_manual(name = "statistics",
+                           values = c(mean = "red", median = "blue"))
+    })
+    # Histogram
+    output$histplot <- renderPlot({
+      ggplot(data = data.frame(x = dataset2), mapping = aes(x = x)) +
+        geom_histogram(binwidth = 1, boundary = 0, col = "black",
+                       fill = boastUtils::boastPalette[6]) +
+        labs(title = "Histogram", x = 'Value', y = 'Frequency') +
+        # mean value line
+        geom_vline(aes(xintercept = mean(x), color = "mean"), size = 1) +
+        # median value line
+        geom_vline(aes(xintercept = median(x), color = "median"), size = 1) +
+        # outliers
+        geom_point(mapping = aes(x = x[1], y = 0.25), size = 4) +
+        # legend
+        scale_color_manual(name = "statistics",
+                           values = c(mean = "red", median = "blue")) +
+        theme(
+          plot.title = element_text(hjust = 0.5), # move title to center
+          panel.background = element_blank(), # remove background
+          axis.line = element_line(colour = "black"), # make axis line black
+          plot.caption = element_text(size = 18), # change the text size
+          text = element_text(size = 18) # change the text size
+        ) +
+        scale_y_continuous(expand = expansion(mult = 0, add = c(0, 1)))
+    })
+    # build dataframe for the values - mean, sd, and five numbers
+    output$values <- DT::renderDT({
+      dataset2 <- c(input$outlier, dataset)
+      df <- data.frame(
+        Mean = (as.character(round(mean(dataset2), digits = 1))),
+        SD = (as.character(round(sd(dataset2), digits = 1))),
+        Min = (as.character(round(min(dataset2), digits = 1))),
+        Q1 = (as.character(round(quantile(dataset2,1/4), digits = 1))),
+        Median = (as.character(round(median(dataset2), digits = 1))),
+        Q3 = (as.character(round(quantile(dataset2,3/4), digits = 1))),
+        Max = (as.character(round(max(dataset2), digits = 1))),
+        stringsAsFactors = FALSE)
+      },
+      style = "bootstrap4",  # You must use this style
+      rownames = FALSE,
+      options = list(
+        responsive = TRUE,
+        scrollX = TRUE,
+        paging = FALSE,  # Set to False for small tables
+        searching = FALSE,  # Set to False to turn of the search bar
+        ordering = FALSE,
+        info = FALSE,
+        columnDefs = list(
+          list(className = "dt-center", targets = -1:6)
+        )
+      )
+    )
+  })
+}
+
+# Boast App Call ----
+boastUtils::boastApp(ui = ui, server = server)
