@@ -42,7 +42,7 @@ ui <- list(
     ),
     dashboardBody(
       tabItems(
-        # First tab content
+        # First tab content ----
         tabItem(
           tabName = "overview",
           #Title
@@ -52,11 +52,13 @@ ui <- list(
           br(),
           h2("Instructions"),
           tags$ol(
-            tags$li("Specify  Population Mean, Standard Deviation,
-                    and the Sample Size n."),
-            tags$li("Change the value of the movable point
-                    to see how it affects the histogram, the boxplot,
-                    and the summary statistics.")
+            tags$li("Specify the values for the sample size, ", tags$em("n"),
+                    "as well as the the population mean and standard deviation."),
+            tags$li("Change the value of a desginated outlier by moving the
+                    outlier slider (or pressing the associated play button to
+                    animate the slider) to see how the potential outlier's value
+                    affects a boxplot, a histogram, and the values of summary
+                    statistics.")
           ),
           div(
             style = "text-align:center",
@@ -79,10 +81,10 @@ ui <- list(
             br(),
             br(),
             br(),
-            div(class = "updated", "Last Update: 7/31/2020 by DG.")
+            div(class = "updated", "Last Update: 9/21/2020 by NJH.")
           )
         ),
-        # Second tab content
+        # Second tab content ----
         tabItem(
           tabName = "explore",
           h2('Explore the Effects of an Outlier'),
@@ -121,42 +123,36 @@ ui <- list(
           ),
           sliderInput(
             inputId = "outlier",
-            label = "Move the outlier (black dot)",
+            label = "Move the outlier (large black dot)",
             min = -50,
             max = 50,
             value = 0,
             animate = animationOptions(interval = 1000, loop = FALSE)
           ),
-          fluidRow(
-            column(
-              width = 6,
-              plotOutput(outputId = "boxPlot", width = '100%'),
-              # Alt text
-              tags$script(HTML(
-                "$(document).ready(function()
+          div(
+            style = "margin: auto;",
+            plotOutput(outputId = "boxPlot", height = "175px"),
+            plotOutput(outputId = "histplot", height = "300px")
+          ),
+          tags$script(HTML(
+            "$(document).ready(function()
                        { document.getElementById('boxPlot').
                        setAttribute('aria-label',
                        `Shows Boxplot interacting with the sliderInput`)
                        })"
-              ))
-            ),
-            column(
-              width = 6,
-              plotOutput(outputId = "histplot", width = '100%'),
-              # Alt text
-              tags$script(HTML(
-                "$(document).ready(function()
+          )),
+          tags$script(HTML(
+            "$(document).ready(function()
                        { document.getElementById('histplot').
                        setAttribute('aria-label',
                        `Shows Histogram interacting with the sliderInput`)
                        })"
-              ))
-            )
-          ),
+          )),
           br(),
           h3("Summary Statistics for the Sample", align = 'center'),
           DT::DTOutput(outputId = "values") # mean, sd, and five numbers
         ),
+        ## References ----
         tabItem(
           tabName = "References",
           h2("References"),
@@ -231,46 +227,56 @@ server <- function(session, input,output){
   observeEvent(input$info,{
     sendSweetAlert(
       session = session,
-      title = "Instructions:",
-      text = "Specify  Population Mean, Standard Deviation,
-      and the Sample Size n",
+      title = "Instructions",
+      text = "Specify the values for the sample size as well as the population
+      mean and standard deviation. Move the outlier slider (or press the play
+      button to animate it) to change the value of a potential outlier.",
       type = "info"
     )
   })
+
+  dataSet <- reactiveVal()
+
+  observeEvent({input$sampleSize | input$mean | input$sd}, {
+    dataSet(c(input$outlier,
+              round(rnorm(n = input$sampleSize - 1,
+                          mean = input$mean,
+                          sd = input$sd),
+                    digits = 2))
+    )
+  })
+
   # You will need to first add whichever palette line from above to your code
   # combine observeEvent since they all react to the sliderInput
-  observeEvent({input$sampleSize | input$mean | input$sd}, {
-    # rnorm: number of size = n, mean = mean, sd = sd
-    dataset <- round(rnorm(n = input$sampleSize-1, mean = input$mean,
-                           sd = input$sd), digits = 2)
-    dataset2 <- c(input$outlier, dataset)
+  observeEvent(input$outlier, {
+    dataSet(c(input$outlier, dataSet()[-1]))
     # Boxplot
     output$boxPlot <- renderPlot({
-      # dataset2 is the combination of the outlier from sliderInput & 'dataset'
-      ggplot(data = data.frame(data0 = dataset2),
-             mapping = aes(x = 0, y = data0)) +
+      ggplot(data = data.frame(data0 = dataSet()),
+             mapping = aes(y = 0, x = data0)) +
         geom_boxplot(width = 0.3, col = "black",
                      fill = boastUtils::boastPalette[6]) +
-        geom_hline(aes(yintercept = mean(data0), color = "mean"), size = 1) +
-        geom_hline(aes(yintercept = median(data0), color = "median"), size = 1) +
-        labs(title = "Boxplot", x = NULL, y = 'Value') +
-        geom_point(mapping = aes(x = 0, y = data0[1]), size = 4) +
+        geom_vline(aes(xintercept = mean(data0), color = "mean"), size = 1) +
+        geom_vline(aes(xintercept = median(data0), color = "median"), size = 1) +
+        labs(title = "Boxplot", y = NULL, x = 'Value') +
+        geom_point(mapping = aes(y = 0, x = data0[1]), size = 4) +
         theme(
           plot.title = element_text(hjust = 0.5),  # move title to center
           panel.background = element_blank(),  # remove background
           axis.line = element_line(colour = "black"),  # make axis line black
           plot.caption = element_text(size = 18),  # change the text size
           text = element_text(size = 18), # change the text size
-          legend.position = "none",
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()
+          axis.text.x = element_text(size = 18),
+          legend.position = "bottom",
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank()
         ) +
         scale_color_manual(name = "statistics",
                            values = c(mean = "red", median = "blue"))
     })
     # Histogram
     output$histplot <- renderPlot({
-      ggplot(data = data.frame(x = dataset2), mapping = aes(x = x)) +
+      ggplot(data = data.frame(x = dataSet()), mapping = aes(x = x)) +
         geom_histogram(binwidth = 1, boundary = 0, col = "black",
                        fill = boastUtils::boastPalette[6]) +
         labs(title = "Histogram", x = 'Value', y = 'Frequency') +
@@ -288,22 +294,23 @@ server <- function(session, input,output){
           panel.background = element_blank(), # remove background
           axis.line = element_line(colour = "black"), # make axis line black
           plot.caption = element_text(size = 18), # change the text size
-          text = element_text(size = 18) # change the text size
+          text = element_text(size = 18), # change the text size
+          axis.text = element_text(size = 18),
+          legend.position = "none"
         ) +
         scale_y_continuous(expand = expansion(mult = 0, add = c(0, 1)))
     })
     # build dataframe for the values - mean, sd, and five numbers
     output$values <- DT::renderDT({
-      dataset2 <- c(input$outlier, dataset)
       df <- data.frame(
-        Mean = (as.character(round(mean(dataset2), digits = 1))),
-        SD = (as.character(round(sd(dataset2), digits = 1))),
-        Min = (as.character(round(min(dataset2), digits = 1))),
-        Q1 = (as.character(round(quantile(dataset2,1/4), digits = 1))),
-        Median = (as.character(round(median(dataset2), digits = 1))),
-        Q3 = (as.character(round(quantile(dataset2,3/4), digits = 1))),
-        Max = (as.character(round(max(dataset2), digits = 1))),
-        stringsAsFactors = FALSE)
+        Mean = round(mean(dataSet()), digits = 1),
+        SD = round(sd(dataSet()), digits = 1),
+        Min = round(min(dataSet()), digits = 1),
+        Q1 = round(quantile(dataSet(), 0.25), digits = 1),
+        Median = round(median(dataSet()), digits = 1),
+        Q3 = round(quantile(dataSet(), 0.75), digits = 1),
+        Max = round(max(dataSet()), digits = 1)
+      )
       },
       style = "bootstrap4",  # You must use this style
       rownames = FALSE,
