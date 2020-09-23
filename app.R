@@ -23,9 +23,15 @@ ui <- list(
     skin = "yellow",
     dashboardHeader(
       titleWidth = 250,
-      title = "Effects of an Outlier",
+      title = "Effects of an Outliers",
       tags$li(class="dropdown",
               actionLink("info", icon("info"), class="myClass")),
+      tags$li(
+        class = "dropdown",
+        tags$a(target = "_blank", icon("comments"),
+          href = "https://pennstate.qualtrics.com/jfe/form/SV_7TLIkFtJEJ7fEPz?appName=Effects_of_Outliers"
+        )
+      ),
       tags$li(class='dropdown',
               tags$a(href="https://shinyapps.science.psu.edu/",
                      icon('home', lib='font-awesome')))),
@@ -129,6 +135,7 @@ ui <- list(
             value = 0,
             animate = animationOptions(interval = 1000, loop = FALSE)
           ),
+          uiOutput("sizeWarning", class = "redtext"),
           div(
             style = "margin: auto;",
             plotOutput(outputId = "boxPlot", height = "175px"),
@@ -238,12 +245,18 @@ server <- function(session, input,output){
   dataSet <- reactiveVal()
 
   observeEvent({input$sampleSize | input$mean | input$sd}, {
-    dataSet(c(input$outlier,
-              round(rnorm(n = input$sampleSize - 1,
-                          mean = input$mean,
-                          sd = input$sd),
-                    digits = 2))
-    )
+    if (input$sampleSize >= 2) {
+      dataSet(c(input$outlier,
+                round(rnorm(n = input$sampleSize - 1,
+                            mean = input$mean,
+                            sd = input$sd),
+                      digits = 2))
+      )
+    } else {
+      output$sizeWarning <- renderUI(
+        "Please set sample size to at least 2; plots will not update until you do."
+      )
+    }
   })
 
   # You will need to first add whichever palette line from above to your code
@@ -311,20 +324,20 @@ server <- function(session, input,output){
         Q3 = round(quantile(dataSet(), 0.75), digits = 1),
         Max = round(max(dataSet()), digits = 1)
       )
-      },
-      style = "bootstrap4",  # You must use this style
-      rownames = FALSE,
-      options = list(
-        responsive = TRUE,
-        scrollX = TRUE,
-        paging = FALSE,  # Set to False for small tables
-        searching = FALSE,  # Set to False to turn of the search bar
-        ordering = FALSE,
-        info = FALSE,
-        columnDefs = list(
-          list(className = "dt-center", targets = -1:6)
-        )
+    },
+    style = "bootstrap4",  # You must use this style
+    rownames = FALSE,
+    options = list(
+      responsive = TRUE,
+      scrollX = TRUE,
+      paging = FALSE,  # Set to False for small tables
+      searching = FALSE,  # Set to False to turn of the search bar
+      ordering = FALSE,
+      info = FALSE,
+      columnDefs = list(
+        list(className = "dt-center", targets = -1:6)
       )
+    )
     )
   })
 }
