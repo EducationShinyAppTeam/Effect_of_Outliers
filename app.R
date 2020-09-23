@@ -135,6 +135,7 @@ ui <- list(
             value = 0,
             animate = animationOptions(interval = 1000, loop = FALSE)
           ),
+          br(),
           uiOutput("sizeWarning", class = "redtext"),
           div(
             style = "margin: auto;",
@@ -252,6 +253,7 @@ server <- function(session, input,output){
                             sd = input$sd),
                       digits = 2))
       )
+      output$sizeWarning <- renderUI(NULL)
     } else {
       output$sizeWarning <- renderUI(
         "Please set sample size to at least 2; plots will not update until you do."
