@@ -38,7 +38,7 @@ ui <- list(
     dashboardSidebar(
       width = 250,
       sidebarMenu(
-        id="tabs",
+        id="pages",
         menuItem("Overview", tabName = "overview",icon = icon("tachometer-alt")),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
         menuItem("References", tabName = "References", icon = icon("leanpub"))
@@ -229,7 +229,7 @@ ui <- list(
 server <- function(session, input,output){
   # navigate to explore page
   observeEvent(input$go,{
-    updateTabItems(session, "tabs", "explore")
+    updateTabItems(session, "pages", "explore")
   })
   # info button on the top right corner
   observeEvent(input$info,{
