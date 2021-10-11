@@ -7,14 +7,6 @@ library(boastUtils)
 library(ggplot2)
 library(DT)
 
-## App Meta Data----------------------------------------------------------------
-APP_TITLE <<- "Effect of Outliers"
-APP_DESCP  <<- paste(
-  "This app provides an opportunity to examine the impact of an outlier on",
-  "the values of various descriptive statistics, a boxplot, and a histogram."
-)
-## End App Meta Data------------------------------------------------------------
-
 # Define global constants and functions ----
 
 # Define the UI ----
@@ -38,7 +30,7 @@ ui <- list(
     dashboardSidebar(
       width = 250,
       sidebarMenu(
-        id="tabs",
+        id="pages",
         menuItem("Overview", tabName = "overview",icon = icon("tachometer-alt")),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
         menuItem("References", tabName = "References", icon = icon("leanpub"))
@@ -229,7 +221,7 @@ ui <- list(
 server <- function(session, input,output){
   # navigate to explore page
   observeEvent(input$go,{
-    updateTabItems(session, "tabs", "explore")
+    updateTabItems(session, "pages", "explore")
   })
   # info button on the top right corner
   observeEvent(input$info,{
