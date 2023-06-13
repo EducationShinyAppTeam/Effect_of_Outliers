@@ -1,0 +1,23 @@
+# Things Needed for This Version
+
+1. Add screenshot 
+2. Add/Fix description/README/CODEOWNERS files ✓
+3. Add docs folder. ✓
+4. Add Cite this app as entry. ✓
+5. Add prerequisites page.
+6. Fix ggplot linewidth argument ✓
+8. Use boastUtils palettes ✓
+9.
+
+
+# Ideas for Future Development
+
+1. Make more detailed instructions.
+
+2. Maybe slow or delay the automatic slider in response to feedback: "The outlier, 
+it moves too fast to show any changes, it needs more delay so the summary 
+statistics and graphs can update and show the user the changes." - robchapp
+
+3. Add little paragraph below the heading of the Explore page and maybe a well 
+panel in response to feedback: "I think it would be beneficial to add some sort of text description to the explore page because there are a lot of visuals and things to adjust (potentially a wellPanel to the sliders to help visually)." - tarynmch
+
