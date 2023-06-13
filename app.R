@@ -1,4 +1,4 @@
-# Library Calls----
+# Load Packages ----
 library(shinydashboard)
 library(shiny)
 library(shinyBS)
@@ -7,52 +7,52 @@ library(boastUtils)
 library(ggplot2)
 library(DT)
 
-## App Meta Data----------------------------------------------------------------
-APP_TITLE <<- "Effect of Outliers"
-APP_DESCP  <<- paste(
-  "This app provides an opportunity to examine the impact of an outlier on",
-  "the values of various descriptive statistics, a boxplot, and a histogram."
-)
-## End App Meta Data------------------------------------------------------------
-
-# Define global constants and functions ----
+# Load additional dependencies and setup functions
+# source("global.R")
 
 # Define the UI ----
 ui <- list(
+  ## app page ----
   dashboardPage(
     skin = "yellow",
     dashboardHeader(
       titleWidth = 250,
-      title = "Effects of an Outliers",
-      tags$li(class="dropdown",
-              actionLink("info", icon("info"), class="myClass")),
+      title = "Effect of Outliers",
+      tags$li(class = "dropdown", actionLink("info", icon("info"))),
       tags$li(
         class = "dropdown",
-        tags$a(target = "_blank", icon("comments"),
-          href = "https://pennstate.qualtrics.com/jfe/form/SV_7TLIkFtJEJ7fEPz?appName=Effects_of_Outliers"
-        )
+        boastUtils::surveyLink(name = "Effect_of_Outliers")
       ),
-      tags$li(class='dropdown',
-              tags$a(href="https://shinyapps.science.psu.edu/",
-                     icon('home', lib='font-awesome')))),
+      tags$li(
+        class = "dropdown",
+        tags$a(
+          href = 'https://shinyapps.science.psu.edu/',
+          icon("house")
+        )
+      )
+    ),
+    ### Sidebar/left navigation menu ----
     dashboardSidebar(
       width = 250,
       sidebarMenu(
-        id="pages",
-        menuItem("Overview", tabName = "overview",icon = icon("tachometer-alt")),
+        id = "pages",
+        menuItem("Overview", tabName = "overview",icon = icon("gauge-high")),
+        menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
         menuItem("References", tabName = "References", icon = icon("leanpub"))
       ),
-      tags$div(class = "sidebar-logo",
-               boastUtils::psu_eberly_logo("reversed"))
+      tags$div(
+        class = "sidebar-logo",
+        boastUtils::sidebarFooter()
+      )
     ),
     dashboardBody(
       tabItems(
-        # First tab content ----
+        #### Overview Page ----
         tabItem(
           tabName = "overview",
           #Title
-          h1("Effects of Outliers"),
+          h1("Effect of Outliers"),
           p("In this app, you will observe the effects of an outlier
              on histograms, boxplots, and summary statistics."),
           br(),
@@ -69,9 +69,9 @@ ui <- list(
           div(
             style = "text-align:center",
             bsButton(
-              inputId = "go",
-              label = "GO!",
-              icon("bolt"),
+              inputId = "goToPrereq",
+              label = "Prerequisites",
+              icon("book"),
               size = "large",
             )
           ),
@@ -87,10 +87,34 @@ ui <- list(
             br(),
             br(),
             br(),
+            br(),
+            "Cite this app as:",
+            br(),
+            citeApp(),
+            br(),
+            br(),
             div(class = "updated", "Last Update: 9/21/2020 by NJH.")
           )
         ),
-        # Second tab content ----
+        #### Prerequisites Page ----
+        tabItem(
+          tabName = "prerequisites",
+          withMathJax(),
+          h2("Prerequisites"),
+          p("Here are some concepts you may want to review before traversing the 
+            Explore Page."),
+          div(
+            style = "text-align: center",
+            bsButton(
+              inputId = "goToExplore", 
+              label = "Explore", 
+              icon = icon("bolt"),
+              size = "large", 
+              class = "circle grow"
+            )
+          )
+        ),
+        #### Explore Page ----
         tabItem(
           tabName = "explore",
           h2('Explore the Effects of an Outlier'),
@@ -226,122 +250,210 @@ ui <- list(
 )
 
 # Define the server ----
-server <- function(session, input,output){
+server <- function(session, input, output) {
   # navigate to explore page
-  observeEvent(input$go,{
-    updateTabItems(session, "pages", "explore")
-  })
-  # info button on the top right corner
-  observeEvent(input$info,{
-    sendSweetAlert(
-      session = session,
-      title = "Instructions",
-      text = "Specify the values for the sample size as well as the population
-      mean and standard deviation. Move the outlier slider (or press the play
-      button to animate it) to change the value of a potential outlier.",
-      type = "info"
-    )
-  })
-
-  dataSet <- reactiveVal()
-
-  observeEvent({input$sampleSize | input$mean | input$sd}, {
-    if (input$sampleSize >= 2) {
-      dataSet(c(input$outlier,
-                round(rnorm(n = input$sampleSize - 1,
-                            mean = input$mean,
-                            sd = input$sd),
-                      digits = 2))
-      )
-      output$sizeWarning <- renderUI(NULL)
-    } else {
-      output$sizeWarning <- renderUI(
-        "Please set sample size to at least 2; plots will not update until you do."
+  observeEvent(
+    eventExpr = input$goToPrereq,
+    handlerExpr = {
+      updateTabItems(
+        session = session, 
+        inputId = "pages",
+        selected = "prerequisites"
       )
     }
-  })
-
+  )
+  
+  observeEvent(
+    eventExpr = input$goToExplore,
+    handlerExpr = {
+      updateTabItems(
+        session = session, 
+        inputId = "pages",
+        selected = "explore"
+      )
+    }
+  )
+  
+  # info button on the top right corner
+  observeEvent(
+    eventExpr = input$info,
+    handlerExpr = {
+      sendSweetAlert(
+        session = session,
+        title = "Information",
+        text = "This application will allow you to visually explore the effect 
+        of an outlier in different scenarios.",
+        type = "info"
+      )
+    }
+  )
+  
+  dataSet <- reactiveVal()
+  
+  observeEvent(
+    eventExpr = {input$sampleSize | input$mean | input$sd},
+    handlerExpr = {
+      if (input$sampleSize >= 2) {
+        dataSet(
+          c(
+            input$outlier,
+            round(
+              rnorm(
+                n = input$sampleSize - 1,
+                mean = input$mean,
+                sd = input$sd
+              ),
+              digits = 2
+            )
+          )
+        )
+        output$sizeWarning <- renderUI(NULL)
+      } else {
+        output$sizeWarning <- renderUI(
+          "Please set sample size to at least 2; plots will not update until you do."
+        )
+      }
+    }
+  )
+  
   # You will need to first add whichever palette line from above to your code
   # combine observeEvent since they all react to the sliderInput
-  observeEvent(input$outlier, {
-    dataSet(c(input$outlier, dataSet()[-1]))
-    # Boxplot
-    output$boxPlot <- renderPlot({
-      ggplot(data = data.frame(data0 = dataSet()),
-             mapping = aes(y = 0, x = data0)) +
-        geom_boxplot(width = 0.3, col = "black",
-                     fill = boastUtils::boastPalette[6]) +
-        geom_vline(aes(xintercept = mean(data0), color = "mean"), size = 1) +
-        geom_vline(aes(xintercept = median(data0), color = "median"), size = 1) +
-        labs(title = "Boxplot", y = NULL, x = 'Value') +
-        geom_point(mapping = aes(y = 0, x = data0[1]), size = 4) +
-        theme(
-          plot.title = element_text(hjust = 0.5),  # move title to center
-          panel.background = element_blank(),  # remove background
-          axis.line = element_line(colour = "black"),  # make axis line black
-          plot.caption = element_text(size = 18),  # change the text size
-          text = element_text(size = 18), # change the text size
-          axis.text.x = element_text(size = 18),
-          legend.position = "bottom",
-          axis.text.y = element_blank(),
-          axis.ticks.y = element_blank()
-        ) +
-        scale_color_manual(name = "statistics",
-                           values = c(mean = "red", median = "blue"))
-    })
-    # Histogram
-    output$histplot <- renderPlot({
-      ggplot(data = data.frame(x = dataSet()), mapping = aes(x = x)) +
-        geom_histogram(binwidth = 1, boundary = 0, col = "black",
-                       fill = boastUtils::boastPalette[6]) +
-        labs(title = "Histogram", x = 'Value', y = 'Frequency') +
-        # mean value line
-        geom_vline(aes(xintercept = mean(x), color = "mean"), size = 1) +
-        # median value line
-        geom_vline(aes(xintercept = median(x), color = "median"), size = 1) +
-        # outliers
-        geom_point(mapping = aes(x = x[1], y = 0.25), size = 4) +
-        # legend
-        scale_color_manual(name = "statistics",
-                           values = c(mean = "red", median = "blue")) +
-        theme(
-          plot.title = element_text(hjust = 0.5), # move title to center
-          panel.background = element_blank(), # remove background
-          axis.line = element_line(colour = "black"), # make axis line black
-          plot.caption = element_text(size = 18), # change the text size
-          text = element_text(size = 18), # change the text size
-          axis.text = element_text(size = 18),
-          legend.position = "none"
-        ) +
-        scale_y_continuous(expand = expansion(mult = 0, add = c(0, 1)))
-    })
-    # build dataframe for the values - mean, sd, and five numbers
-    output$values <- DT::renderDT({
-      df <- data.frame(
-        Mean = round(mean(dataSet()), digits = 1),
-        SD = round(sd(dataSet()), digits = 1),
-        Min = round(min(dataSet()), digits = 1),
-        Q1 = round(quantile(dataSet(), 0.25), digits = 1),
-        Median = round(median(dataSet()), digits = 1),
-        Q3 = round(quantile(dataSet(), 0.75), digits = 1),
-        Max = round(max(dataSet()), digits = 1)
+  observeEvent(
+    eventExpr = input$outlier, 
+    handlerExpr = {
+      dataSet(c(input$outlier, dataSet()[-1]))
+      # Boxplot
+      output$boxPlot <- renderPlot(
+        expr = {
+          ggplot(
+            data = data.frame(data0 = dataSet()),
+            mapping = aes(y = 0, x = data0)
+          ) +
+            geom_boxplot(
+              width = 0.3,
+              col = boastUtils::boastPalette[5],
+              fill = boastUtils::boastPalette[6]
+            ) +
+            geom_vline(
+              mapping = aes(xintercept = mean(data0), color = "mean"), 
+              linewidth = 1
+            ) +
+            geom_vline(
+              mapping = aes(xintercept = median(data0), color = "median"), 
+              linewidth = 1
+            ) +
+            labs(
+              title = "Boxplot",
+              y = NULL, 
+              x = 'Value'
+            ) +
+            geom_point(
+              mapping = aes(y = 0, x = data0[1]),
+              size = 4
+            ) +
+            theme(
+              plot.title = element_text(hjust = 0.5),  # move title to center
+              panel.background = element_blank(),  # remove background
+              axis.line = element_line(colour = boastUtils::boastPalette[5]),  # make axis line black
+              plot.caption = element_text(size = 18),  # change the text size
+              text = element_text(size = 18), # change the text size
+              axis.text.x = element_text(size = 18),
+              legend.position = "bottom",
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank()
+            ) +
+            scale_color_manual(
+              name = "statistics",
+              values = c(
+                mean = boastUtils::psuPalette[2], 
+                median = boastUtils::psuPalette[1]
+              )
+            )
+        }
       )
-    },
-    style = "bootstrap4",  # You must use this style
-    rownames = FALSE,
-    options = list(
-      responsive = TRUE,
-      scrollX = TRUE,
-      paging = FALSE,  # Set to False for small tables
-      searching = FALSE,  # Set to False to turn of the search bar
-      ordering = FALSE,
-      info = FALSE,
-      columnDefs = list(
-        list(className = "dt-center", targets = -1:6)
+      
+      # Histogram
+      output$histplot <- renderPlot(
+        expr = {
+          ggplot(
+            data = data.frame(x = dataSet()), 
+            mapping = aes(x = x)
+          ) +
+            geom_histogram(
+              binwidth = 1, 
+              boundary = 0, 
+              col = boastUtils::boastPalette[5],
+              fill = boastUtils::boastPalette[6]
+            ) +
+            labs(
+              title = "Histogram",
+              x = 'Value',
+              y = 'Frequency'
+            ) +
+            # mean value line
+            geom_vline(
+              mapping = aes(xintercept = mean(x), color = "mean"),
+              linewidth = 1
+            ) +
+            # median value line
+            geom_vline(
+              mapping = aes(xintercept = median(x), color = "median"), 
+              linewidth = 1
+            ) +
+            # outliers
+            geom_point(
+              mapping = aes(x = x[1], y = 0.25), 
+              size = 4
+            ) +
+            # legend
+            scale_color_manual(
+              name = "statistics",
+              values = c(
+                mean = boastUtils::psuPalette[2], 
+                median = boastUtils::psuPalette[1]
+              )
+            ) +
+            theme(
+              plot.title = element_text(hjust = 0.5), # move title to center
+              panel.background = element_blank(), # remove background
+              axis.line = element_line(colour = boastUtils::boastPalette[5]), # make axis line black
+              plot.caption = element_text(size = 18), # change the text size
+              text = element_text(size = 18), # change the text size
+              axis.text = element_text(size = 18),
+              legend.position = "none"
+            ) +
+            scale_y_continuous(expand = expansion(mult = 0, add = c(0, 1)))
+        }
       )
-    )
-    )
-  })
+      # build dataframe for the values - mean, sd, and five numbers
+      output$values <- DT::renderDT(
+        expr = {
+          df <- data.frame(
+            Mean = round(mean(dataSet()), digits = 1),
+            SD = round(sd(dataSet()), digits = 1),
+            Min = round(min(dataSet()), digits = 1),
+            Q1 = round(quantile(dataSet(), 0.25), digits = 1),
+            Median = round(median(dataSet()), digits = 1),
+            Q3 = round(quantile(dataSet(), 0.75), digits = 1),
+            Max = round(max(dataSet()), digits = 1)
+          )
+        },
+        style = "bootstrap4",  # You must use this style
+        rownames = FALSE,
+        options = list(
+          responsive = TRUE,
+          scrollX = TRUE,
+          paging = FALSE,  # Set to False for small tables
+          searching = FALSE,  # Set to False to turn of the search bar
+          ordering = FALSE,
+          info = FALSE,
+          columnDefs = list(
+            list(className = "dt-center", targets = -1:6)
+          )
+        )
+      )
+    }
+  )
 }
 
 # Boast App Call ----
