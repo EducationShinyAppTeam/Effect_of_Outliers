@@ -1,0 +1,19 @@
+Title: Effect of Outliers
+ShortName: Effect of Outliers
+Date: 2021-10-11
+Lifecycle: experimental
+Authors@R: c(
+    person(given = "Neil", family = "Hatfield", email = "neil.hatfield@psu.edu", role = c("aut", "cre")),
+    person(given = "Robert", family = "Carey", email = "rpc5102@psu.edu", role = c("aut"))
+  )
+Chapter: Data Description
+Description: This app provides an opportunity to examine the impact of an outlier on the values of various descriptive statistics, a boxplot, and a histogram.
+LearningObjectives: c(
+    "The student will learn to understand the effects outliers have on descriptive statistics, boxplots, and histograms."
+  )
+DisplayMode: Normal
+URL: https://psu-eberly.shinyapps.io/Effect_of_Outliers
+BugReports: https://github.com/EducationShinyAppTeam/Effect_of_Outliers/issues
+License: CC-BY-NC-SA-4.0
+Tags: simulation
+Type: Shiny
