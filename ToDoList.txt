@@ -1,13 +1,14 @@
 # Things Needed for This Version
 
-1. Add screenshot 
-2. Add/Fix description/README/CODEOWNERS files ✓
+1. Add screenshot ✓
+2. Add/Fix description/README/CODEOWNERS/.lintr files ✓
 3. Add docs folder. ✓
 4. Add Cite this app as entry. ✓
 6. Fix ggplot linewidth argument ✓
 8. Use boastUtils palettes ✓
 9. Update code to utilize the alt argument. ✓
 10. Update description aut and ctrb ✓
+11. Add Prerequisites Page --- (Work in Progress)
 
 
 # Ideas for Future Development
@@ -24,7 +25,7 @@ statistics and graphs can update and show the user the changes."
 panel in response to feedback: "I think it would be beneficial to add some sort 
 of text description to the explore page because there are a lot of visuals and 
 things to adjust (potentially a wellPanel to the sliders to help visually)." 
-- tarynmch 
+- tarynmch ✓
 
 4. Add to the overview page in reponse to feedback: "The overview page could use 
-more information/instructions about the app." -sv101 
+more information/instructions about the app." -sv101 ✓
