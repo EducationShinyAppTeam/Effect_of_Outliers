@@ -58,13 +58,18 @@ ui <- list(
           br(),
           h2("Instructions"),
           tags$ol(
+            tags$li("Press the 'Prerequisites' button to review concepts on the 
+                    Prerequisites page."),
+            tags$li("Once you have properly reviewed the prerequisites, head to 
+                    the Explore page to see the concepts in action."),
             tags$li("Specify the values for the sample size, ", tags$em("n"),
-                    "as well as the the population mean and standard deviation."),
+                    "as well as the the population mean and standard deviation 
+                    using the three input sliders."),
             tags$li("Change the value of a desginated outlier by moving the
                     outlier slider (or pressing the associated play button to
-                    animate the slider) to see how the potential outlier's value
-                    affects a boxplot, a histogram, and the values of summary
-                    statistics.")
+                    animate the slider)."),
+            tags$li("Watch how the potential outlier's value affects a boxplot, 
+                    a histogram, and the values of summary statistics.")
           ),
           div(
             style = "text-align:center",
@@ -93,7 +98,7 @@ ui <- list(
             citeApp(),
             br(),
             br(),
-            div(class = "updated", "Last Update: 9/21/2020 by NJH.")
+            div(class = "updated", "Last Update: 6/15/2023 by SB.")
           )
         ),
         #### Prerequisites Page ----
@@ -103,6 +108,29 @@ ui <- list(
           h2("Prerequisites"),
           p("Here are some concepts you may want to review before traversing the 
             Explore Page."),
+          br(),
+          box(
+            width = 12,
+            title = tags$strong("Concept 1"),
+            collapsible = TRUE,
+            collapsed = FALSE,
+            p("This text contains information explaining a specific concept.")
+          ),
+          box(
+            width = 12,
+            title = tags$strong("Concept 2"),
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("This text contains information explaining a specific concept.")
+          ),
+          box(
+            width = 12,
+            title = tags$strong("Concept 3"),
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("This text contains information explaining a specific concept.")
+          ),
+          br(),
           div(
             style = "text-align: center",
             bsButton(
@@ -118,46 +146,56 @@ ui <- list(
         tabItem(
           tabName = "explore",
           h2('Explore the Effects of an Outlier'),
-          fluidRow(
-            column(
-              width = 4,
-              sliderInput(
-                inputId = "sampleSize",
-                label = "Sample Size",
-                min = 0,
-                max = 100,
-                value = 50,
-                step = 1
+          p("Watch closely to see how the change in the value of the outlier has
+            an effect on the histogram, boxplot, and summary statistics."),
+          wellPanel(
+            fluidRow(
+              column(
+                width = 4,
+                sliderInput(
+                  inputId = "sampleSize",
+                  label = "Sample Size",
+                  min = 0,
+                  max = 100,
+                  value = 50,
+                  step = 1
+                )
+              ),
+              column(
+                width = 4,
+                sliderInput(
+                  inputId = "mean",
+                  label = "Population Mean",
+                  min = -10,
+                  max = 10,
+                  value = 0
+                )
+              ),
+              column(
+                width = 4,
+                sliderInput(
+                  inputId = "sd",
+                  label = "Population Standard Deviation",
+                  min = 0,
+                  max = 10,
+                  value = 2
+                )
               )
             ),
-            column(
-              width = 4,
-              sliderInput(
-                inputId = "mean",
-                label = "Population Mean",
-                min = -10,
-                max = 10,
-                value = 0
-              )
-            ),
-            column(
-              width = 4,
-              sliderInput(
-                inputId = "sd",
-                label = "Population Standard Deviation",
-                min = 0,
-                max = 10,
-                value = 2
+            fluidRow(
+              column(
+                width = 6,
+                offset = 3,
+                sliderInput(
+                  inputId = "outlier",
+                  label = "Move the outlier (large black dot)",
+                  min = -50,
+                  max = 50,
+                  value = 0,
+                  animate = animationOptions(interval = 1700, loop = FALSE) #milliseconds
+                )
               )
             )
-          ),
-          sliderInput(
-            inputId = "outlier",
-            label = "Move the outlier (large black dot)",
-            min = -50,
-            max = 50,
-            value = 0,
-            animate = animationOptions(interval = 1000, loop = FALSE)
           ),
           br(),
           uiOutput("sizeWarning", class = "redtext"),
@@ -166,20 +204,6 @@ ui <- list(
             plotOutput(outputId = "boxPlot", height = "175px"),
             plotOutput(outputId = "histplot", height = "300px")
           ),
-          tags$script(HTML(
-            "$(document).ready(function()
-                       { document.getElementById('boxPlot').
-                       setAttribute('aria-label',
-                       `Shows Boxplot interacting with the sliderInput`)
-                       })"
-          )),
-          tags$script(HTML(
-            "$(document).ready(function()
-                       { document.getElementById('histplot').
-                       setAttribute('aria-label',
-                       `Shows Histogram interacting with the sliderInput`)
-                       })"
-          )),
           br(),
           h3("Summary Statistics for the Sample", align = 'center'),
           DT::DTOutput(outputId = "values") # mean, sd, and five numbers
@@ -282,7 +306,7 @@ server <- function(session, input, output) {
         session = session,
         title = "Information",
         text = "This application will allow you to visually explore the effect 
-        of an outlier in different scenarios.",
+        of an outlier in different ways.",
         type = "info"
       )
     }
@@ -310,7 +334,15 @@ server <- function(session, input, output) {
         output$sizeWarning <- renderUI(NULL)
       } else {
         output$sizeWarning <- renderUI(
-          "Please set sample size to at least 2; plots will not update until you do."
+          "Please set sample size to at least 2; the plots will not update until 
+          you do."
+        )
+        sendSweetAlert(
+          session = session,
+          title = "Warning",
+          text = "Please set sample size to at least 2; the plots will not update 
+          until you do!",
+        type = "warning"
         )
       }
     }
@@ -369,7 +401,8 @@ server <- function(session, input, output) {
                 median = boastUtils::psuPalette[1]
               )
             )
-        }
+        },
+        alt = "Shows Boxplot interacting with the slider input."
       )
       
       # Histogram
@@ -423,7 +456,8 @@ server <- function(session, input, output) {
               legend.position = "none"
             ) +
             scale_y_continuous(expand = expansion(mult = 0, add = c(0, 1)))
-        }
+        },
+        alt = "Shows Histogram interacting with the slider input."
       )
       # build dataframe for the values - mean, sd, and five numbers
       output$values <- DT::renderDT(
