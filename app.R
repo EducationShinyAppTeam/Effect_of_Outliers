@@ -106,29 +106,96 @@ ui <- list(
           tabName = "prerequisites",
           withMathJax(),
           h2("Prerequisites"),
-          p("Here are some concepts you may want to review before traversing the 
+          p("Here are some concepts you may want to review before heading to the 
             Explore Page."),
+          br(),
+          h3("Summary Statistics for a Sample"),
           br(),
           box(
             width = 12,
-            title = tags$strong("Concept 1"),
+            title = tags$strong("Mean"),
             collapsible = TRUE,
-            collapsed = FALSE,
-            p("This text contains information explaining a specific concept.")
+            collapsed = TRUE,
+            p("This number represents the arithmetic mean of all the values 
+              within the dataset."),
+            p(
+              "\\(\\bar{x} = \\sum_{i=1}^{n} \\frac{x_i}{n}\\)"
+              )
+          ),
+          
+          box(
+            width = 12,
+            title = tags$strong("Standard Deviation"),
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("The standard deviation is a measure of the dispersion or spread 
+              of the data relative to the mean."),
+            p(
+              "\\(\\sigma = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n}}\\)"
+            )
           ),
           box(
             width = 12,
-            title = tags$strong("Concept 2"),
+            title = tags$strong("Minimum"),
             collapsible = TRUE,
             collapsed = TRUE,
-            p("This text contains information explaining a specific concept.")
+            p("This is the number with the smallest value in the data.")
           ),
           box(
             width = 12,
-            title = tags$strong("Concept 3"),
+            title = tags$strong("Lower Quartile (Q1)"),
             collapsible = TRUE,
             collapsed = TRUE,
-            p("This text contains information explaining a specific concept.")
+            p("This is the number in the 25th percentile, in which 25% of the 
+              data has values less than this number.")
+          ),
+          box(
+            width = 12,
+            title = tags$strong("Median"),
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("This is the number in the 50th percentile, where 50% of the data 
+              has values less than or equal to this number, and the remaining 50% 
+              has values greater than or equal to this number.")
+          ),
+          box(
+            width = 12,
+            title = tags$strong("Upper Quartile (Q3)"),
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("This is the number in the 75th percentile, in which 75% of the 
+              data has values less than this number.")
+          ),
+          box(
+            width = 12,
+            title = tags$strong("Maximum"),
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("This is the number with the largest value in the data.")
+          ),
+          br(),
+          h3("Plots"),
+          br(),
+          box(
+            width = 12,
+            title = tags$strong("Boxplot"),
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("This plot displays the following summary for a data set:"),
+            tags$li("Min"),
+            tags$li("Q1"),
+            tags$li("Median"),
+            tags$li("Q3"),
+            tags$li("Max"),
+          ),
+          box(
+            width = 12,
+            title = tags$strong("Histogram"),
+            collapsible = TRUE,
+            collapsed = TRUE,
+            p("This plot displays a frequency distribution of data using bars that
+              are typically adjacent to one another and represent intervals or 
+              ranges of values.")
           ),
           br(),
           div(
