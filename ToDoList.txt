@@ -8,7 +8,7 @@
 8. Use boastUtils palettes ✓
 9. Update code to utilize the alt argument. ✓
 10. Update description aut and ctrb ✓
-11. Add Prerequisites Page --- (Work in Progress)
+11. Add Prerequisites Page ✓
 
 
 # Ideas for Future Development
