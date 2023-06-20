@@ -4,11 +4,14 @@
 2. Add/Fix description/README/CODEOWNERS/.lintr files ✓
 3. Add docs folder. ✓
 4. Add Cite this app as entry. ✓
-6. Fix ggplot linewidth argument ✓
-8. Use boastUtils palettes ✓
-9. Update code to utilize the alt argument. ✓
-10. Update description aut and ctrb ✓
-11. Add Prerequisites Page ✓
+5. Fix ggplot linewidth argument ✓
+6. Use boastUtils palettes ✓
+7. Update code to utilize the alt argument. ✓
+8. Update description aut and ctrb ✓
+9. Add Prerequisites Page ✓
+10. Fix prereqs(Add IQR, use bullet points instead of small boxes).
+11. Split the number summary into two tables.
+
 
 
 # Ideas for Future Development
