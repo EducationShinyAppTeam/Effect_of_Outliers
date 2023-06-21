@@ -10,7 +10,8 @@
 8. Update description aut and ctrb ✓
 9. Add Prerequisites Page ✓
 10. Fix prereqs(Add IQR, use bullet points instead of small boxes).
-11. Split the number summary into two tables.
+11. Add pictures(Prereqs)
+11. Split the number summary into two tables. ✓
 
 
 
