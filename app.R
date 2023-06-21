@@ -77,7 +77,7 @@ ui <- list(
               inputId = "goToPrereq",
               label = "Prerequisites",
               icon("book"),
-              size = "large",
+              size = "large"
             )
           ),
           #Acknowledgements
@@ -109,93 +109,101 @@ ui <- list(
           p("Here are some concepts you may want to review before heading to the 
             Explore Page."),
           br(),
-          h3("Summary Statistics for a Sample"),
-          br(),
-          box(
-            width = 12,
-            title = tags$strong("Mean"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("This number represents the arithmetic mean of all the values 
-              within the dataset."),
-            p(
-              "\\(\\bar{x} = \\sum_{i=1}^{n} \\frac{x_i}{n}\\)"
-              )
-          ),
-          
-          box(
-            width = 12,
-            title = tags$strong("Standard Deviation"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("The standard deviation is a measure of the dispersion or spread 
-              of the data relative to the mean."),
-            p(
-              "\\(\\sigma = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n}}\\)"
-            )
-          ),
-          box(
-            width = 12,
-            title = tags$strong("Minimum"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("This is the number with the smallest value in the data.")
-          ),
-          box(
-            width = 12,
-            title = tags$strong("Lower Quartile (Q1)"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("This is the number in the 25th percentile, in which 25% of the 
-              data has values less than this number.")
-          ),
-          box(
-            width = 12,
-            title = tags$strong("Median"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("This is the number in the 50th percentile, where 50% of the data 
-              has values less than or equal to this number, and the remaining 50% 
-              has values greater than or equal to this number.")
-          ),
-          box(
-            width = 12,
-            title = tags$strong("Upper Quartile (Q3)"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("This is the number in the 75th percentile, in which 75% of the 
-              data has values less than this number.")
-          ),
-          box(
-            width = 12,
-            title = tags$strong("Maximum"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("This is the number with the largest value in the data.")
-          ),
-          br(),
           h3("Plots"),
           br(),
-          box(
-            width = 12,
-            title = tags$strong("Boxplot"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("This plot displays the following summary for a data set:"),
-            tags$li("Min"),
-            tags$li("Q1"),
-            tags$li("Median"),
-            tags$li("Q3"),
-            tags$li("Max"),
-          ),
-          box(
-            width = 12,
-            title = tags$strong("Histogram"),
-            collapsible = TRUE,
-            collapsed = TRUE,
-            p("This plot displays a frequency distribution of data using bars that
+          fluidRow(
+            box(
+              width = 6,
+              title = tags$strong("Boxplot"),
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p("This plot displays the following summary for a data set:"),
+              tags$li("Min"),
+              tags$li("Q1"),
+              tags$li("Median"),
+              tags$li("Q3"),
+              tags$li("Max"),
+              br(),
+              tags$figure(
+                align = "left",
+                tags$img(
+                  src = "boxPlotEx.png",
+                  width = "50%", #add percentage
+                  alt = "Fill in"
+                )
+              )
+            ),
+            box(
+              width = 6,
+              title = tags$strong("Histogram"),
+              collapsible = TRUE,
+              collapsed = TRUE,
+              p("This plot displays a frequency distribution of data using bars that
               are typically adjacent to one another and represent intervals or 
               ranges of values.")
+            )
+          ),
+          br(),
+          h3("Summary Statistics for a Sample"),
+          br(),
+          fluidRow(
+            box(
+              width = 6,
+              title = tags$strong("Descriptive Statistics"),
+              collapsible = TRUE,
+              collapsed = TRUE,
+              tags$strong("Mean:"),
+              tags$ul(
+                tags$li("This number represents the arithmetic mean of all the values 
+              within the dataset."),
+              tags$li("\\(\\bar{x} = \\sum_{i=1}^{n} \\frac{x_i}{n}\\)") 
+              ),
+              br(),
+              tags$strong("Standard Deviation:"),
+              tags$ul(
+                tags$li("The standard deviation is a measure of the dispersion or spread 
+              of the data relative to the mean."),
+              tags$li("\\(\\sigma = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n}}\\)")
+              ),
+              br(),
+              tags$strong("Interquartile Range (IQR):"),
+              tags$ul(
+                tags$li("This number is the range of values from the lower quartile to the upper quartile."),
+                tags$li("\\(\\text{IQR} = Q_3 - Q_1\\)")
+              )
+            ),
+            box(
+              width = 6,
+              title = tags$strong("Five Number Summary"),
+              collapsible = TRUE,
+              collapsed = TRUE,
+              tags$ol(
+                tags$li(tags$strong("Minimum")),
+                tags$ul(
+                  tags$li("This is the number with the smallest value in the data.")
+                ),
+                tags$li(tags$strong("Lower Quartile (Q1)")),
+                tags$ul(
+                  tags$li("This is the number in the 25th percentile, in which 25% of the 
+              data has values less than this number.")
+                ),
+              tags$li(tags$strong("Median")),
+              tags$ul(
+                tags$li("This is the number in the 50th percentile, where 50% of the data 
+              has values less than or equal to this number, and the remaining 50% 
+              has values greater than or equal to this number.")
+              ),
+              tags$li(tags$strong("Upper Quartile (Q3)")),
+              tags$ul(
+                tags$li("This is the number in the 75th percentile, in which 75% of the 
+              data has values less than this number.")
+              ),
+              tags$li(tags$strong("Maximum")),
+              tags$ul(
+                tags$li("This is the number with the largest value in the data.")
+              )
+              )
+            )
           ),
           br(),
           div(
@@ -273,9 +281,10 @@ ui <- list(
           ),
           br(),
           h3("Summary Statistics for the Sample", align = 'center'),
-          DT::DTOutput(outputId = "values") # mean, sd, and five numbers
+          DT::DTOutput(outputId = "senStat"), # mean, sd
+          DT::DTOutput(outputId = "fiveNumSum") #five numbers
         ),
-        ## References ----
+        #### References ----
         tabItem(
           tabName = "References",
           h2("References"),
@@ -527,11 +536,31 @@ server <- function(session, input, output) {
         alt = "Shows Histogram interacting with the slider input."
       )
       # build dataframe for the values - mean, sd, and five numbers
-      output$values <- DT::renderDT(
+      output$senStat <- DT::renderDT(
         expr = {
-          df <- data.frame(
+          df1 <- data.frame(
             Mean = round(mean(dataSet()), digits = 1),
             SD = round(sd(dataSet()), digits = 1),
+            IQR = (round(quantile(dataSet(), 0.75), digits = 1) - round(quantile(dataSet(), 0.25), digits = 1))
+          )
+        },
+        style = "bootstrap4",  # You must use this style
+        rownames = FALSE,
+        options = list(
+          responsive = TRUE,
+          scrollX = TRUE,
+          paging = FALSE,  # Set to False for small tables
+          searching = FALSE,  # Set to False to turn of the search bar
+          ordering = FALSE,
+          info = FALSE,
+          columnDefs = list(
+            list(className = "dt-center", targets = "_all")
+          )
+        )
+      )
+      output$fiveNumSum <- DT::renderDT(
+        expr = {
+          df2 <- data.frame(
             Min = round(min(dataSet()), digits = 1),
             Q1 = round(quantile(dataSet(), 0.25), digits = 1),
             Median = round(median(dataSet()), digits = 1),
@@ -549,13 +578,15 @@ server <- function(session, input, output) {
           ordering = FALSE,
           info = FALSE,
           columnDefs = list(
-            list(className = "dt-center", targets = -1:6)
+            list(className = "dt-center", targets = "_all")
           )
         )
       )
     }
   )
 }
+
+
 
 # Boast App Call ----
 boastUtils::boastApp(ui = ui, server = server)
