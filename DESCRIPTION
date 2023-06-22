@@ -8,7 +8,8 @@ Authors@R: c(
     person(given = "Zhiliang", family = "Zhang", role = c("ctb")),
     person(given = "Jiajun", family = "Gao", role = c("ctb")),
     person(given = "Ruisi", family = "Wang", role = c("ctb")),
-    person(given = "Daehoon", family = "Gwak", role = c("ctb"))
+    person(given = "Daehoon", family = "Gwak", role = c("ctb")),
+    person(given = "Sean", family = "Burke", role = c("aut"))
   )
 Chapter: Data Description
 Description: This app provides an opportunity to examine the impact of an outlier on the values of various descriptive statistics, a boxplot, and a histogram.

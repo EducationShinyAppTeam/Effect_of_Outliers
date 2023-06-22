@@ -86,9 +86,10 @@ ui <- list(
           h2("Acknowledgements"),
           p(
             "This app was originally developed and coded by Caihui Xiao
-            and Sitong Liu in June 2017. The was further updated by
+            and Sitong Liu in June 2017. The app was further updated by
             Zhiliang Zhang and Jiajun Gao in June 2018,
-            and Ruisi Wang in June 2019, and Daehoon Gwak in July 2020.",
+            and Ruisi Wang in June 2019, Daehoon Gwak in July 2020, and Sean
+            Burke in June 2023.",
             br(),
             br(),
             br(),
