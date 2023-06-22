@@ -125,10 +125,10 @@ ui <- list(
               tags$li("Max"),
               br(),
               tags$figure(
-                align = "left",
+                align = "center",
                 tags$img(
-                  src = "boxPlotEx.png",
-                  width = "50%", #add percentage
+                  src = "boxPlotEx.jpeg",
+                  width = "100%", #add percentage
                   alt = "Fill in"
                 )
               )
@@ -140,7 +140,15 @@ ui <- list(
               collapsed = TRUE,
               p("This plot displays a frequency distribution of data using bars that
               are typically adjacent to one another and represent intervals or 
-              ranges of values.")
+              ranges of values."),
+              tags$figure(
+                align = "center",
+                tags$img(
+                  src = "hisEx.jpeg",
+                  width = "100%", #add percentage
+                  alt = "Fill in"
+                )
+              )
             )
           ),
           br(),
