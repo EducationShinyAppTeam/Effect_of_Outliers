@@ -290,7 +290,7 @@ ui <- list(
           ),
           br(),
           h3("Summary Statistics for the Sample", align = 'center'),
-          DT::DTOutput(outputId = "senStat"), # mean, sd
+          DT::DTOutput(outputId = "senStat",width = "50%"), # mean, sd
           DT::DTOutput(outputId = "fiveNumSum") #five numbers
         ),
         #### References ----
