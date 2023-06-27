@@ -9,8 +9,8 @@
 7. Update code to utilize the alt argument. ✓
 8. Update description aut and ctrb ✓
 9. Add Prerequisites Page ✓
-10. Fix prereqs(Add IQR, use bullet points instead of small boxes).
-11. Add pictures(Prereqs)
+10. Fix prereqs(Add IQR, use bullet points instead of small boxes). ✓
+11. Add pictures(Prereqs) ✓
 11. Split the number summary into two tables. ✓
 
 
