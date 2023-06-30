@@ -11,8 +11,9 @@
 9. Add Prerequisites Page ✓
 10. Fix prereqs(Add IQR, use bullet points instead of small boxes). ✓
 11. Add pictures(Prereqs) ✓
-11. Split the number summary into two tables. ✓
-
+12. Split the number summary into two tables. ✓
+13. Update outline ✓
+14. update alt
 
 
 # Ideas for Future Development

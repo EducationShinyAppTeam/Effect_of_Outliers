@@ -71,6 +71,7 @@ ui <- list(
             tags$li("Watch how the potential outlier's value affects a boxplot, 
                     a histogram, and the values of summary statistics.")
           ),
+          ##### Prereq button -----
           div(
             style = "text-align:center",
             bsButton(
@@ -80,7 +81,7 @@ ui <- list(
               size = "large"
             )
           ),
-          #Acknowledgements
+          ##### Acknowledgements  ----
           br(),
           br(),
           h2("Acknowledgements"),
@@ -232,6 +233,7 @@ ui <- list(
           h2('Explore the Effects of an Outlier'),
           p("Watch closely to see how the change in the value of the outlier has
             an effect on the histogram, boxplot, and summary statistics."),
+          ##### Slider Inputs Panel -----
           wellPanel(
             fluidRow(
               column(
@@ -283,14 +285,16 @@ ui <- list(
           ),
           br(),
           uiOutput("sizeWarning", class = "redtext"),
+          ##### Plot Outputs ----
           div(
             style = "margin: auto;",
             plotOutput(outputId = "boxPlot", height = "175px"),
             plotOutput(outputId = "histplot", height = "300px")
           ),
           br(),
+          ##### Data Table Outputs----
           h3("Summary Statistics for the Sample", align = 'center'),
-          DT::DTOutput(outputId = "senStat",width = "50%"), # mean, sd
+          DT::DTOutput(outputId = "descStat",width = "50%"), # mean, sd
           DT::DTOutput(outputId = "fiveNumSum") #five numbers
         ),
         #### References ----
@@ -360,7 +364,8 @@ ui <- list(
 
 # Define the server ----
 server <- function(session, input, output) {
-  # navigate to explore page
+  
+  ## Prerequisites Button ----
   observeEvent(
     eventExpr = input$goToPrereq,
     handlerExpr = {
@@ -371,7 +376,7 @@ server <- function(session, input, output) {
       )
     }
   )
-  
+  ## Explore Button ----
   observeEvent(
     eventExpr = input$goToExplore,
     handlerExpr = {
@@ -383,7 +388,7 @@ server <- function(session, input, output) {
     }
   )
   
-  # info button on the top right corner
+  ## Info Button  ----
   observeEvent(
     eventExpr = input$info,
     handlerExpr = {
@@ -397,8 +402,26 @@ server <- function(session, input, output) {
     }
   )
   
+  # initialize dataset
   dataSet <- reactiveVal()
   
+  ## Alt argument function ----
+  altArg <- function(plotType) {
+    paste0(
+      "This ",
+      plotType,
+      " interacting with the slider input currently displays a",
+      if (round(mean(dataSet()), digits = 1) > round(median(dataSet()), digits = 1)) {
+          " right-skewed distribution of the data."
+      } else if (round(mean(dataSet()), digits = 1) < round(median(dataSet()), digits = 1))  {
+        " left-skewed distribution of the data."
+      } else if (round(mean(dataSet()), digits = 1) == round(median(dataSet()), digits = 1))  {
+        " symmetric distribution of the data."
+      }
+    )
+  }
+  
+  ## Slider Inputs ----
   observeEvent(
     eventExpr = {input$sampleSize | input$mean | input$sd},
     handlerExpr = {
@@ -435,11 +458,14 @@ server <- function(session, input, output) {
   
   # You will need to first add whichever palette line from above to your code
   # combine observeEvent since they all react to the sliderInput
+  
+  ## Plots and Data Tables----
   observeEvent(
     eventExpr = input$outlier, 
     handlerExpr = {
       dataSet(c(input$outlier, dataSet()[-1]))
-      # Boxplot
+      
+      ### Render Boxplot ----
       output$boxPlot <- renderPlot(
         expr = {
           ggplot(
@@ -487,10 +513,10 @@ server <- function(session, input, output) {
               )
             )
         },
-        alt = "Shows Boxplot interacting with the slider input."
+        alt = altArg("boxplot")
       )
       
-      # Histogram
+      ## Render Histogram ----
       output$histplot <- renderPlot(
         expr = {
           ggplot(
@@ -542,10 +568,10 @@ server <- function(session, input, output) {
             ) +
             scale_y_continuous(expand = expansion(mult = 0, add = c(0, 1)))
         },
-        alt = "Shows Histogram interacting with the slider input."
+        alt = altArg("histogram")
       )
-      # build dataframe for the values - mean, sd, and five numbers
-      output$senStat <- DT::renderDT(
+      ### Mean, SD, and IQR Data Table----
+      output$descStat <- DT::renderDT(
         expr = {
           df1 <- data.frame(
             Mean = round(mean(dataSet()), digits = 1),
@@ -567,6 +593,8 @@ server <- function(session, input, output) {
           )
         )
       )
+      
+      ### 5 Number Summary Data Table ----
       output$fiveNumSum <- DT::renderDT(
         expr = {
           df2 <- data.frame(
