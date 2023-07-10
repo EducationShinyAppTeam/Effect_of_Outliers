@@ -71,7 +71,7 @@ ui <- list(
             tags$li("Watch how the potential outlier's value affects a boxplot, 
                     a histogram, and the values of summary statistics.")
           ),
-          ##### Prereq button -----
+          ##### Prereq Button -----
           div(
             style = "text-align:center",
             bsButton(
@@ -126,12 +126,17 @@ ui <- list(
               tags$li("Q3"),
               tags$li("Max"),
               br(),
+              p("Please refer to the 'Five Number Summary' section for more information."),
+              br(),
               tags$figure(
                 align = "center",
                 tags$img(
                   src = "boxPlotEx.jpeg",
                   width = "100%", #add percentage
-                  alt = "Fill in"
+                  alt = "This is an example boxplot that the locates the minimum
+                  and maximum on the ends of the whiskers, the quartiles on the
+                  sides of he box, and the median as a line in the middle of the 
+                  box."
                 )
               )
             ),
@@ -140,15 +145,17 @@ ui <- list(
               title = tags$strong("Histogram"),
               collapsible = TRUE,
               collapsed = TRUE,
-              p("This plot displays a frequency distribution of data using bars that
-              are typically adjacent to one another and represent intervals or 
-              ranges of values."),
+              p("This plot displays a frequency distribution of data using bars 
+                that are typically adjacent to one another and represent intervals 
+                or ranges of values."),
               tags$figure(
                 align = "center",
                 tags$img(
                   src = "hisEx.jpeg",
                   width = "100%", #add percentage
-                  alt = "Fill in"
+                  alt = "This is an example histogram that displays a slightly 
+                  left-skewed distribution of the data and locates the median as 
+                  a line that lies slightly right from the center of the plot."
                 )
               )
             )
@@ -157,6 +164,28 @@ ui <- list(
           h3("Summary Statistics for a Sample"),
           br(),
           fluidRow(
+            box(
+              width = 6,
+              title = tags$strong("Five Number Summary"),
+              collapsible = TRUE,
+              collapsed = TRUE,
+              tags$ol(
+                tags$li(tags$strong("Minimum: "), "This is the smallest observed
+                        value in the data collection."),
+                tags$li(tags$strong("Lower Quartile (Q1): "), "This is the number 
+                        in the 25th percentile, in which 25% of the data has values 
+                        less than this number."),
+                tags$li(tags$strong("Median: "), "This is the number in the 50th 
+                      percentile, where 50% of the data has values less than or 
+                      equal to this number, and the remaining 50% has values 
+                      greater than or equal to this number."),
+                tags$li(tags$strong("Upper Quartile (Q3): "), "This is the number 
+                      in the 75th percentile, in which 75% of the data has values 
+                      less than this number."),
+                tags$li(tags$strong("Maximum: "), "This is the largest observed
+                        value in the data collection."),
+              )
+            ),
             box(
               width = 6,
               title = tags$strong("Descriptive Statistics"),
@@ -181,38 +210,6 @@ ui <- list(
                 tags$li("This number is the range of values from the lower quartile to the upper quartile."),
                 tags$li("\\(\\text{IQR} = Q_3 - Q_1\\)")
               )
-            ),
-            box(
-              width = 6,
-              title = tags$strong("Five Number Summary"),
-              collapsible = TRUE,
-              collapsed = TRUE,
-              tags$ol(
-                tags$li(tags$strong("Minimum")),
-                tags$ul(
-                  tags$li("This is the number with the smallest value in the data.")
-                ),
-                tags$li(tags$strong("Lower Quartile (Q1)")),
-                tags$ul(
-                  tags$li("This is the number in the 25th percentile, in which 25% of the 
-              data has values less than this number.")
-                ),
-              tags$li(tags$strong("Median")),
-              tags$ul(
-                tags$li("This is the number in the 50th percentile, where 50% of the data 
-              has values less than or equal to this number, and the remaining 50% 
-              has values greater than or equal to this number.")
-              ),
-              tags$li(tags$strong("Upper Quartile (Q3)")),
-              tags$ul(
-                tags$li("This is the number in the 75th percentile, in which 75% of the 
-              data has values less than this number.")
-              ),
-              tags$li(tags$strong("Maximum")),
-              tags$ul(
-                tags$li("This is the number with the largest value in the data.")
-              )
-              )
             )
           ),
           br(),
@@ -232,7 +229,9 @@ ui <- list(
           tabName = "explore",
           h2('Explore the Effects of an Outlier'),
           p("Watch closely to see how the change in the value of the outlier has
-            an effect on the histogram, boxplot, and summary statistics."),
+            an effect on the histogram, boxplot, and summary statistics. Which 
+            values of the summary statistics change as the outlier changes? Which 
+            values stay the same?"),
           ##### Slider Inputs Panel -----
           wellPanel(
             fluidRow(
@@ -365,7 +364,7 @@ ui <- list(
 # Define the server ----
 server <- function(session, input, output) {
   
-  ## Prerequisites Button ----
+  ## Prereq Button ----
   observeEvent(
     eventExpr = input$goToPrereq,
     handlerExpr = {
