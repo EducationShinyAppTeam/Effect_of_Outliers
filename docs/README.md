@@ -7,4 +7,4 @@
 ![App Screenshot](../docs/screenshot.png)
 
 # App Description
-This app provides an opportunity to examine the impact of an outlier on the values of various descriptive statistics, a boxplot, and a histogram.
+This app provides an opportunity to examine the impact of an outlier on the values of various descriptive statistics, a box plot, and a histogram.

@@ -12,9 +12,9 @@ Authors@R: c(
     person(given = "Sean", family = "Burke", role = c("aut"))
   )
 Chapter: Data Description
-Description: This app provides an opportunity to examine the impact of an outlier on the values of various descriptive statistics, a boxplot, and a histogram.
+Description: This app provides an opportunity to examine the impact of an outlier on the values of various descriptive statistics, a box plot, and a histogram.
 LearningObjectives: c(
-    "The student will learn to understand the effects outliers have on descriptive statistics, boxplots, and histograms."
+    "The student will learn to understand the effects outliers have on descriptive statistics, box plots, and histograms."
   )
 DisplayMode: Normal
 URL: https://psu-eberly.shinyapps.io/Effect_of_Outliers

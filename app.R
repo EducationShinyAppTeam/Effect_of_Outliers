@@ -54,7 +54,7 @@ ui <- list(
           #Title
           h1("Effect of Outliers"),
           p("In this app, you will observe the effects of an outlier
-             on histograms, boxplots, and summary statistics."),
+             on histograms, box plots, and summary statistics."),
           br(),
           h2("Instructions"),
           tags$ol(
@@ -68,7 +68,7 @@ ui <- list(
             tags$li("Change the value of a desginated outlier by moving the
                     outlier slider (or pressing the associated play button to
                     animate the slider)."),
-            tags$li("Watch how the potential outlier's value affects a boxplot, 
+            tags$li("Watch how the potential outlier's value affects a box plot, 
                     a histogram, and the values of summary statistics.")
           ),
           ##### Prereq Button -----
@@ -116,7 +116,7 @@ ui <- list(
           fluidRow(
             box(
               width = 6,
-              title = tags$strong("Boxplot"),
+              title = tags$strong("Box Plot"),
               collapsible = TRUE,
               collapsed = TRUE,
               p("This plot displays the following summary for a data set:"),
@@ -133,7 +133,7 @@ ui <- list(
                 tags$img(
                   src = "boxPlotEx.jpeg",
                   width = "100%", #add percentage
-                  alt = "This is an example boxplot that the locates the minimum
+                  alt = "This is an example box plot that the locates the minimum
                   and maximum on the ends of the whiskers, the quartiles on the
                   sides of he box, and the median as a line in the middle of the 
                   box."
@@ -229,7 +229,7 @@ ui <- list(
           tabName = "explore",
           h2('Explore the Effects of an Outlier'),
           p("Watch closely to see how the change in the value of the outlier has
-            an effect on the histogram, boxplot, and summary statistics. Which 
+            an effect on the histogram, box plot, and summary statistics. Which 
             values of the summary statistics change as the outlier changes? Which 
             values stay the same?"),
           ##### Slider Inputs Panel -----
@@ -464,7 +464,7 @@ server <- function(session, input, output) {
     handlerExpr = {
       dataSet(c(input$outlier, dataSet()[-1]))
       
-      ### Render Boxplot ----
+      ### Render Box Plot ----
       output$boxPlot <- renderPlot(
         expr = {
           ggplot(
@@ -485,7 +485,7 @@ server <- function(session, input, output) {
               linewidth = 1
             ) +
             labs(
-              title = "Boxplot",
+              title = "Box Plot",
               y = NULL, 
               x = 'Value'
             ) +
