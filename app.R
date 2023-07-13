@@ -7,14 +7,14 @@ library(boastUtils)
 library(ggplot2)
 library(DT)
 
-# Load additional dependencies and setup functions
+# Load additional dependencies and setup functions ----
 # source("global.R")
 
 # Define the UI ----
 ui <- list(
-  ## app page ----
   dashboardPage(
     skin = "yellow",
+    ## Header ----
     dashboardHeader(
       titleWidth = 250,
       title = "Effect of Outliers",
@@ -31,7 +31,7 @@ ui <- list(
         )
       )
     ),
-    ### Sidebar/left navigation menu ----
+    ## Sidebar ----
     dashboardSidebar(
       width = 250,
       sidebarMenu(
@@ -46,12 +46,12 @@ ui <- list(
         boastUtils::sidebarFooter()
       )
     ),
+    ## Body ----
     dashboardBody(
       tabItems(
-        #### Overview Page ----
+        ### Overview Page ----
         tabItem(
           tabName = "overview",
-          #Title
           h1("Effect of Outliers"),
           p("In this app, you will observe the effects of an outlier
              on histograms, box plots, and summary statistics."),
@@ -71,26 +71,25 @@ ui <- list(
             tags$li("Watch how the potential outlier's value affects a box plot, 
                     a histogram, and the values of summary statistics.")
           ),
-          ##### Prereq Button -----
+          #### Prereq Button 
           div(
-            style = "text-align:center",
+            style = "text-align:center;",
             bsButton(
               inputId = "goToPrereq",
               label = "Prerequisites",
-              icon("book"),
+              icon = icon("book"),
               size = "large"
             )
           ),
-          ##### Acknowledgements  ----
+          #### Acknowledgements
           br(),
           br(),
           h2("Acknowledgements"),
           p(
-            "This app was originally developed and coded by Caihui Xiao
-            and Sitong Liu in June 2017. The app was further updated by
-            Zhiliang Zhang and Jiajun Gao in June 2018,
-            and Ruisi Wang in June 2019, Daehoon Gwak in July 2020, and Sean
-            Burke in June 2023.",
+            "This app was originally developed and coded by Caihui Xiao and 
+            Sitong Liu in June 2017. The app was further updated by Zhiliang Zhang
+            and Jiajun Gao in June 2018, Ruisi Wang in June 2019, Daehoon Gwak in
+            July 2020, and Sean Burke in June 2023.",
             br(),
             br(),
             br(),
@@ -103,7 +102,7 @@ ui <- list(
             div(class = "updated", "Last Update: 6/15/2023 by SB.")
           )
         ),
-        #### Prerequisites Page ----
+        ### Prerequisites Page ----
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
@@ -115,30 +114,49 @@ ui <- list(
           br(),
           fluidRow(
             box(
-              width = 6,
-              title = tags$strong("Box Plot"),
+              width = 12,
+              title = tags$strong("Box Plots"),
               collapsible = TRUE,
               collapsed = TRUE,
-              p("This plot displays the following summary for a data set:"),
-              tags$li("Min"),
-              tags$li("Q1"),
-              tags$li("Median"),
-              tags$li("Q3"),
-              tags$li("Max"),
-              br(),
-              p("Please refer to the 'Five Number Summary' section for more information."),
+              p("There are several kinds of box plots that we encounter, including
+                standard box plots and modified/outlier box plots. All box plots
+                reveal information about the data collection but do not display
+                [all of] the individual cases that make up the collection. They
+                are generally composed of a central box and two whiskers on either
+                side, which is why they are sometimes referred to as box-and-whisker
+                plots."),
+              p("A standard box plot highlights the values of the sample minimum
+                (Min), the first quartile (Q1), the sample median, the third 
+                quartile (Q3), and the sample maximum (Max). (Refer to the
+                'Five Number Summary' section for more information on these 
+                statistics.) We can also see other aspects such as the spread of
+                the data (via the sample range and inter-quartile range (IQR)) as
+                well as some aspects of case density."),
               br(),
               tags$figure(
                 align = "center",
                 tags$img(
                   src = "boxPlotEx.jpeg",
-                  width = "100%", #add percentage
+                  width = "100%",
+                  # Sean, make alt text shorter
                   alt = "This is an example box plot that the locates the minimum
                   and maximum on the ends of the whiskers, the quartiles on the
                   sides of he box, and the median as a line in the middle of the 
                   box."
                 )
-              )
+              ),
+              p("A modified or outlier box plot is a variation of the box plot
+                where we impose a rule to flag cases as being potential outliers.
+                These potential outliers will appear as dots in our plot. Instead
+                of the whiskers extending to the values of the sample minimum and
+                maximum, the whiskers will extend to 'hinge' points based upon 
+                our chosen flag rule. The flag rule is expressed as some
+                multiple (typically, 1.5) of the IQR above and below the value 
+                of the sample median; \\(Median \\pm 1.5*IQR\\). If the lower
+                hinge is less than the sample minimum, the whisker will only 
+                extend to the value of the sample minimum. The same is true for 
+                the upper hinge relative to the sample maximum."),
+              # Sean, add a new figure for outlier box plots
             ),
             box(
               width = 6,
