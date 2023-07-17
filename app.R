@@ -63,13 +63,14 @@ ui <- list(
             tags$li("Once you have properly reviewed the prerequisites, head to 
                     the Explore page to see the concepts in action."),
             tags$li("Specify the values for the sample size, ", tags$em("n"),
-                    "as well as the the population mean and standard deviation 
+                    ", as well as the the population mean and standard deviation 
                     using the three input sliders."),
-            tags$li("Change the value of a desginated outlier by moving the
-                    outlier slider (or pressing the associated play button to
+            tags$li("Change the value of the manipulable point by moving the
+                    manipulable point slider (or pressing the associated play button to
                     animate the slider)."),
-            tags$li("Watch how the potential outlier's value affects a box plot, 
-                    a histogram, and the values of summary statistics.")
+            tags$li("Watch how the manipulable point becomes a potential outlier
+                    and how its value affects a box plot, a histogram, and the 
+                    values of summary statistics.")
           ),
           #### Prereq Button 
           div(
@@ -136,13 +137,10 @@ ui <- list(
               tags$figure(
                 align = "center",
                 tags$img(
-                  src = "boxPlotEx.jpeg",
+                  src = "stanBoxPlotEx.jpeg",
                   width = "100%",
-                  # Sean, make alt text shorter
-                  alt = "This is an example box plot that the locates the minimum
-                  and maximum on the ends of the whiskers, the quartiles on the
-                  sides of he box, and the median as a line in the middle of the 
-                  box."
+                  alt = "This is an example of a standard box plot that highlights 
+                  the five number summary."
                 )
               ),
               p("A modified or outlier box plot is a variation of the box plot
@@ -156,16 +154,26 @@ ui <- list(
                 hinge is less than the sample minimum, the whisker will only 
                 extend to the value of the sample minimum. The same is true for 
                 the upper hinge relative to the sample maximum."),
-              # Sean, add a new figure for outlier box plots
+              br(),
+              tags$figure(
+                align = "center",
+                tags$img(
+                  src = "modBoxPlotEx.jpeg",
+                  width = "100%",
+                  alt = "This is an example of a modified of outlier box plot that 
+                  highlights the median, quartiles, hinges, and potential outliers."
+                )
+              )
             ),
             box(
               width = 6,
               title = tags$strong("Histogram"),
               collapsible = TRUE,
               collapsed = TRUE,
-              p("This plot displays a frequency distribution of data using bars 
-                that are typically adjacent to one another and represent intervals 
-                or ranges of values."),
+              p("This plot displays the frequency, relative frequency, or density 
+                of data using bars that are typically adjacent to one another and 
+                represent intervals or ranges of values (in this app, we'll display 
+                frequency histograms)."),
               tags$figure(
                 align = "center",
                 tags$img(
@@ -191,15 +199,15 @@ ui <- list(
                 tags$li(tags$strong("Minimum: "), "This is the smallest observed
                         value in the data collection."),
                 tags$li(tags$strong("Lower Quartile (Q1): "), "This is the number 
-                        in the 25th percentile, in which 25% of the data has values 
-                        less than this number."),
+                        in the 25th percentile, in which at least 25% of the data
+                        has values less than this number."),
                 tags$li(tags$strong("Median: "), "This is the number in the 50th 
-                      percentile, where 50% of the data has values less than or 
-                      equal to this number, and the remaining 50% has values 
+                      percentile, where at least 50% of the data has values less 
+                      than or equal to this number, and at least 50% has values 
                       greater than or equal to this number."),
                 tags$li(tags$strong("Upper Quartile (Q3): "), "This is the number 
-                      in the 75th percentile, in which 75% of the data has values 
-                      less than this number."),
+                      in the 75th percentile, in which at least 75% of the data 
+                      has values less than this number."),
                 tags$li(tags$strong("Maximum: "), "This is the largest observed
                         value in the data collection."),
               )
@@ -225,7 +233,8 @@ ui <- list(
               br(),
               tags$strong("Interquartile Range (IQR):"),
               tags$ul(
-                tags$li("This number is the range of values from the lower quartile to the upper quartile."),
+                tags$li("This number is the range of the middle half of values 
+                        from the lower quartile to the upper quartile."),
                 tags$li("\\(\\text{IQR} = Q_3 - Q_1\\)")
               )
             )
@@ -246,9 +255,11 @@ ui <- list(
         tabItem(
           tabName = "explore",
           h2('Explore the Effects of an Outlier'),
-          p("Watch closely to see how the change in the value of the outlier has
-            an effect on the histogram, box plot, and summary statistics. Which 
-            values of the summary statistics change as the outlier changes? Which 
+          p("Watch closely as the manipulable point (represented by a diamond) 
+            becomes a potential outlier when turned red. Pay close attention how 
+            the change in the value of the manipulable point affects the histogram,
+            outlier box plot, and summary statistics. Which values of the summary 
+            statistics change as the value of the manipulable point changes? Which 
             values stay the same?"),
           ##### Slider Inputs Panel -----
           wellPanel(
@@ -291,7 +302,7 @@ ui <- list(
                 offset = 3,
                 sliderInput(
                   inputId = "outlier",
-                  label = "Move the outlier (large black dot)",
+                  label = "Move the manipulable point (Diamond)",
                   min = -50,
                   max = 50,
                   value = 0,
@@ -438,6 +449,28 @@ server <- function(session, input, output) {
     )
   }
   
+  ## Manipulable Point color function ----
+  
+  changeColor <- function() {
+    #if manipulable point's value is greater than the upper hinge, turn red 
+    if (input$outlier > (
+      (round(quantile(dataSet(), 0.75), digits = 1)) + 
+      (1.5 * ((round(quantile(dataSet(), 0.75), digits = 1)) -
+             (round(quantile(dataSet(), 0.25), digits = 1))))
+    ) |
+    #if manipulable point's value is less than the lower hinge, turn red 
+    input$outlier < (
+      (round(quantile(dataSet(), 0.25), digits = 1)) - 
+      (1.5 * ((round(quantile(dataSet(), 0.75), digits = 1)) -
+             (round(quantile(dataSet(), 0.25), digits = 1)))
+    ))) {
+      boastUtils::psuPalette[2]
+    } else {
+      boastUtils::boastPalette[5]
+    }
+  }
+  
+  
   ## Slider Inputs ----
   observeEvent(
     eventExpr = {input$sampleSize | input$mean | input$sd},
@@ -509,7 +542,9 @@ server <- function(session, input, output) {
             ) +
             geom_point(
               mapping = aes(y = 0, x = data0[1]),
-              size = 4
+              shape = "diamond",
+              color = changeColor(),
+              size = 6
             ) +
             theme(
               plot.title = element_text(hjust = 0.5),  # move title to center
@@ -564,7 +599,9 @@ server <- function(session, input, output) {
             # outliers
             geom_point(
               mapping = aes(x = x[1], y = 0.25), 
-              size = 4
+              shape = "diamond",
+              color = changeColor(),
+              size = 6
             ) +
             # legend
             scale_color_manual(
