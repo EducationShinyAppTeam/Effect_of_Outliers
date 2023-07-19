@@ -65,10 +65,10 @@ ui <- list(
             tags$li("Specify the values for the sample size, ", tags$em("n"),
                     ", as well as the the population mean and standard deviation 
                     using the three input sliders."),
-            tags$li("Change the value of the manipulable point by moving the
-                    manipulable point slider (or pressing the associated play button to
-                    animate the slider)."),
-            tags$li("Watch how the manipulable point becomes a potential outlier
+            tags$li("Change the value of diamond by moving the designated slider 
+                    (or pressing the associated play button to animate the slider
+                    )."),
+            tags$li("Watch how the diamond becomes a potential outlier
                     and how its value affects a box plot, a histogram, and the 
                     values of summary statistics.")
           ),
@@ -115,7 +115,7 @@ ui <- list(
           br(),
           fluidRow(
             box(
-              width = 12,
+              width = 6,
               title = tags$strong("Box Plots"),
               collapsible = TRUE,
               collapsed = TRUE,
@@ -255,12 +255,11 @@ ui <- list(
         tabItem(
           tabName = "explore",
           h2('Explore the Effects of an Outlier'),
-          p("Watch closely as the manipulable point (represented by a diamond) 
-            becomes a potential outlier when turned red. Pay close attention how 
-            the change in the value of the manipulable point affects the histogram,
-            outlier box plot, and summary statistics. Which values of the summary 
-            statistics change as the value of the manipulable point changes? Which 
-            values stay the same?"),
+          p("Watch closely as the diamond becomes a potential outlier when turned 
+            red. Pay close attention how the change in the value of the diamond 
+            affects the histogram, outlier box plot, and summary statistics. Which 
+            values of the summary statistics change as the value of the diamond 
+            changes? Which values stay the same?"),
           ##### Slider Inputs Panel -----
           wellPanel(
             fluidRow(
@@ -302,7 +301,7 @@ ui <- list(
                 offset = 3,
                 sliderInput(
                   inputId = "outlier",
-                  label = "Move the manipulable point (Diamond)",
+                  label = "Move the Diamond",
                   min = -50,
                   max = 50,
                   value = 0,
@@ -449,16 +448,16 @@ server <- function(session, input, output) {
     )
   }
   
-  ## Manipulable Point color function ----
+  ## Diamond color function ----
   
   changeColor <- function() {
-    #if manipulable point's value is greater than the upper hinge, turn red 
+    #if diamond's value is greater than the upper hinge, turn red 
     if (input$outlier > (
       (round(quantile(dataSet(), 0.75), digits = 1)) + 
       (1.5 * ((round(quantile(dataSet(), 0.75), digits = 1)) -
              (round(quantile(dataSet(), 0.25), digits = 1))))
     ) |
-    #if manipulable point's value is less than the lower hinge, turn red 
+    #if diamond's value is less than the lower hinge, turn red 
     input$outlier < (
       (round(quantile(dataSet(), 0.25), digits = 1)) - 
       (1.5 * ((round(quantile(dataSet(), 0.75), digits = 1)) -
@@ -544,7 +543,7 @@ server <- function(session, input, output) {
               mapping = aes(y = 0, x = data0[1]),
               shape = "diamond",
               color = changeColor(),
-              size = 6
+              size = 9
             ) +
             theme(
               plot.title = element_text(hjust = 0.5),  # move title to center
@@ -601,7 +600,7 @@ server <- function(session, input, output) {
               mapping = aes(x = x[1], y = 0.25), 
               shape = "diamond",
               color = changeColor(),
-              size = 6
+              size = 9
             ) +
             # legend
             scale_color_manual(
