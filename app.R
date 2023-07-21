@@ -149,9 +149,8 @@ ui <- list(
                 of the whiskers extending to the values of the sample minimum and
                 maximum, the whiskers will extend to 'hinge' points based upon 
                 our chosen flag rule. The flag rule is expressed as some
-                multiple (typically, 1.5) of the IQR above and below the value 
-                of the sample median; \\(Median \\pm 1.5*IQR\\). If the lower
-                hinge is less than the sample minimum, the whisker will only 
+                multiple (typically, 1.5) of the IQR above the value of the third
+                quartile \\((Q3 + 1.5*IQR)\\) and below the value of the first quartile \\((Q1 - 1.5*IQR)\\). If the hinge is less than the sample minimum, the whisker will only 
                 extend to the value of the sample minimum. The same is true for 
                 the upper hinge relative to the sample maximum."),
               br(),
@@ -524,7 +523,8 @@ server <- function(session, input, output) {
             geom_boxplot(
               width = 0.3,
               col = boastUtils::boastPalette[5],
-              fill = boastUtils::boastPalette[6]
+              fill = boastUtils::boastPalette[6],
+              outlier.size = 5.5
             ) +
             geom_vline(
               mapping = aes(xintercept = mean(data0), color = "mean"), 
@@ -544,7 +544,7 @@ server <- function(session, input, output) {
               shape = "diamond",
               color = changeColor(),
               size = 9
-            ) +
+            ) + 
             theme(
               plot.title = element_text(hjust = 0.5),  # move title to center
               panel.background = element_blank(),  # remove background
