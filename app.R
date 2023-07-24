@@ -66,13 +66,12 @@ ui <- list(
                     ", as well as the the population mean and standard deviation 
                     using the three input sliders."),
             tags$li("Change the value of diamond by moving the designated slider 
-                    (or pressing the associated play button to animate the slider
-                    )."),
+                    (or pressing the associated play button to animate the slider)."),
             tags$li("Watch how the diamond becomes a potential outlier
                     and how its value affects a box plot, a histogram, and the 
                     values of summary statistics.")
           ),
-          #### Prereq Button 
+          #### Prerequisites Button 
           div(
             style = "text-align:center;",
             bsButton(
@@ -304,7 +303,7 @@ ui <- list(
                   min = -50,
                   max = 50,
                   value = 0,
-                  animate = animationOptions(interval = 1700, loop = FALSE) #milliseconds
+                  animate = animationOptions(interval = 1700, loop = FALSE)
                 )
               )
             )
