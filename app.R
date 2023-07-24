@@ -119,9 +119,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               p("There are several kinds of box plots that we encounter, including
-                standard box plots and modified/outlier box plots. All box plots
-                reveal information about the data collection but do not display
-                [all of] the individual cases that make up the collection. They
+                standard box plots and modified/outlier box plots. They
                 are generally composed of a central box and two whiskers on either
                 side, which is why they are sometimes referred to as box-and-whisker
                 plots."),
@@ -226,7 +224,7 @@ ui <- list(
               tags$ul(
                 tags$li("The standard deviation is a measure of the dispersion or spread 
               of the data relative to the mean."),
-              tags$li("\\(\\sigma = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n}}\\)")
+              tags$li("\\(s = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n}}\\)")
               ),
               br(),
               tags$strong("Interquartile Range (IQR):"),
