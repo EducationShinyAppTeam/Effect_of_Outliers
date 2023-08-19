@@ -224,7 +224,7 @@ ui <- list(
               tags$ul(
                 tags$li("The standard deviation is a measure of the dispersion or spread 
               of the data relative to the mean."),
-              tags$li("\\(s = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n}}\\)")
+              tags$li("\\(s = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n-1}}\\)")
               ),
               br(),
               tags$strong("Interquartile Range (IQR):"),
