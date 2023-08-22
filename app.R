@@ -8,7 +8,7 @@ library(ggplot2)
 library(DT)
 
 # Load additional dependencies and setup functions ----
-# source("global.R")
+# None in this app
 
 # Define the UI ----
 ui <- list(
@@ -18,7 +18,14 @@ ui <- list(
     dashboardHeader(
       titleWidth = 250,
       title = "Effect of Outliers",
-      tags$li(class = "dropdown", actionLink("info", icon("info"))),
+      tags$li(
+        class = "dropdown",
+        actionLink(
+          inputId = "info",
+          label = tags$span(class = "sr-only", "info"),
+          icon("info")
+        )
+      ),
       tags$li(
         class = "dropdown",
         boastUtils::surveyLink(name = "Effect_of_Outliers")
@@ -27,7 +34,7 @@ ui <- list(
         class = "dropdown",
         tags$a(
           href = 'https://shinyapps.science.psu.edu/',
-          icon("house")
+          icon("house"), tags$span(class = "sr-only", "BOAST Site"),
         )
       )
     ),
@@ -71,7 +78,6 @@ ui <- list(
                     and how its value affects a box plot, a histogram, and the 
                     values of summary statistics.")
           ),
-          #### Prerequisites Button 
           div(
             style = "text-align:center;",
             bsButton(
@@ -81,7 +87,7 @@ ui <- list(
               size = "large"
             )
           ),
-          #### Acknowledgements
+          #### Acknowledgements ----
           br(),
           br(),
           h2("Acknowledgements"),
@@ -163,13 +169,17 @@ ui <- list(
             ),
             box(
               width = 6,
-              title = tags$strong("Histogram"),
+              title = tags$strong("Histograms"),
               collapsible = TRUE,
               collapsed = TRUE,
-              p("This plot displays the frequency, relative frequency, or density 
-                of data using bars that are typically adjacent to one another and 
-                represent intervals or ranges of values (in this app, we'll display 
-                frequency histograms)."),
+              p("This plot displays the (absolute) frequency, relative frequency,
+                or density of data using bars that are typically adjacent to one
+                another. Each bar covers an interval (a set) of values marked by
+                the bar's width. The height of each bar tells us how many observed
+                values are in that interval, either as an direct count (absolute
+                frequency), a proportion of the total (relative frequency), or as
+                a density. In this app, we'll display (absolute) frequency
+                histograms)."),
               tags$figure(
                 align = "center",
                 tags$img(
@@ -191,59 +201,88 @@ ui <- list(
               title = tags$strong("Five Number Summary"),
               collapsible = TRUE,
               collapsed = TRUE,
+              p("[Tukey's] Five Number Summary consists of the values of five
+                sample statistics. The underlying attribute needs to have sense 
+                of ordering; that is, we can think of a case as having more or 
+                less of that attribute. We generally present the Five Number 
+                Summary from smallest value to largest value."),
               tags$ol(
-                tags$li(tags$strong("Minimum: "), "This is the smallest observed
-                        value in the data collection."),
-                tags$li(tags$strong("Lower Quartile (Q1): "), "This is the number 
-                        in the 25th percentile, in which at least 25% of the data
-                        has values less than this number."),
-                tags$li(tags$strong("Median: "), "This is the number in the 50th 
-                      percentile, where at least 50% of the data has values less 
-                      than or equal to this number, and at least 50% has values 
-                      greater than or equal to this number."),
-                tags$li(tags$strong("Upper Quartile (Q3): "), "This is the number 
-                      in the 75th percentile, in which at least 75% of the data 
-                      has values less than this number."),
-                tags$li(tags$strong("Maximum: "), "This is the largest observed
-                        value in the data collection."),
+                tags$li(tags$strong("Sample Minimum: "), "The value of this 
+                        statistic provides a measure of the lower extremum. We 
+                        get this value by looking for the smallest observed value
+                        in the data collection."),
+                tags$li(tags$strong("Lower Quartile (Q1): "), "This statistic 
+                        measures the point at which we can break the ordered data
+                        collection into two pieces--one piece containing the 
+                        smallest 25% of the observed data and the other containing
+                        the largest 75%. We find this value by looking for the 
+                        value (does not need to be observed) that lets us make 
+                        such a break. This statistic is also known as the First 
+                        Quartile and 25th Percentile."),
+                tags$li(tags$strong("Sample Median: "), "This statistic measures
+                        the middle of an ordered data collection. That is to say,
+                        we can break the ordered collection into two (nearly) 
+                        equally-sized sub-collections. The value of this statistic
+                        should be half-way through the ordered collection. Thus,
+                        50% of the observed values should be smaller than it; the
+                        other half should be at least as large as this value. The
+                        Sample Median is also known as the Second Quartile and
+                        50th Percentile."),
+                tags$li(tags$strong("Upper Quartile (Q3): "), "This statistic 
+                        measures the point at which we can break the ordered data
+                        collection into two pieces--one piece containing the 
+                        smallest 75% of the observed data and the other containing
+                        the largest 25%. We find this value by looking for the 
+                        value (does not need to be observed) that lets us make 
+                        such a break. This statistic is also known as the Third 
+                        Quartile and 75th Percentile."),
+                tags$li(tags$strong("Sample Maximum: "), "The value of this 
+                        statistic provides a measure of the upper extremum. We 
+                        get this value by looking for the largest observed value
+                        in the data collection."),
               )
             ),
             box(
               width = 6,
-              title = tags$strong("Descriptive Statistics"),
+              title = tags$strong("Additional Descriptive Statistics"),
               collapsible = TRUE,
               collapsed = TRUE,
-              tags$strong("Mean:"),
+              tags$strong("Sample (Arithmetic) Mean"),
               tags$ul(
-                tags$li("This number represents the arithmetic mean of all the values 
-              within the dataset."),
-              tags$li("\\(\\bar{x} = \\sum_{i=1}^{n} \\frac{x_i}{n}\\)") 
+                tags$li("This statistic provides a measure of how well the data
+                        collection performed at collecting values relative to the
+                        size of the data collection."),
+                tags$li("We can calculate this value by adding up all of the 
+                        observed values (including any zeros) and then dividing
+                        that total by how many cases are in the data collection.",
+                        "\\[\\bar{x} = \\sum\\limits_{i=1}^{n} x_i \\bigg/ n\\]"
+                )        
               ),
               br(),
-              tags$strong("Standard Deviation:"),
+              tags$strong("Sample (Arithmetic) Standard Deviation"),
               tags$ul(
-                tags$li("The standard deviation is a measure of the dispersion or spread 
-              of the data relative to the mean."),
-              tags$li("\\(s = \\sqrt{\\frac{\\sum_{i=1}^{n} (x_i - \\bar{x})^2}{n-1}}\\)")
+                tags$li("This statistic measures how much pairs of cases differ
+                        from each other in value, relative to the sample size. 
+                        This statistic comes from the Sample (Arithmetic) Variance
+                        and ajusts the unit of measurement by applying the square
+                        root."),
+                tags$li("We can calculate the value of this statistic with the
+                        following formula:",
+                        "\\[s =\\sqrt{\\frac{\\sum\\limits_{i=1}^{n}
+                        \\left(x_i - \\bar{x}\\right)^2}{n-1}}\\]"
+                )
               ),
               br(),
-              tags$strong("Interquartile Range (IQR):"),
+              tags$strong("Interquartile Range (IQR)"),
               tags$ul(
-                tags$li("This number is the range of the middle half of values 
-                        from the lower quartile to the upper quartile."),
-                tags$li("\\(\\text{IQR} = Q_3 - Q_1\\)")
+                tags$li("This statistic provides a measure of the spread for the
+                        middle half of the ordered data collection."),
+                tags$li("We can calculate the value of this statistic by finding
+                        the difference between the values of the Upper and Lower
+                        Quartiles",
+                        "\\[\\text{IQR} = Q_3 - Q_1\\]"
+                )
               )
-            )
-          ),
-          br(),
-          div(
-            style = "text-align: center",
-            bsButton(
-              inputId = "goToExplore", 
-              label = "Explore", 
-              icon = icon("bolt"),
-              size = "large", 
-              class = "circle grow"
             )
           )
         ),
@@ -309,14 +348,11 @@ ui <- list(
           br(),
           uiOutput("sizeWarning", class = "redtext"),
           ##### Plot Outputs ----
-          div(
-            style = "margin: auto;",
-            plotOutput(outputId = "boxPlot", height = "175px"),
-            plotOutput(outputId = "histplot", height = "300px")
-          ),
+          plotOutput(outputId = "boxPlot", height = "175px"),
+          plotOutput(outputId = "histplot", height = "300px"),
           br(),
           ##### Data Table Outputs----
-          h3("Summary Statistics for the Sample", align = 'center'),
+          h3("Summary Statistics for the Sample"),
           DT::DTOutput(outputId = "descStat",width = "50%"), # mean, sd
           DT::DTOutput(outputId = "fiveNumSum") #five numbers
         ),
@@ -326,33 +362,33 @@ ui <- list(
           h2("References"),
           p(     #shinyBS
             class = "hangingindent",
-            "Bailey, E. (2015), shinyBS: Twitter bootstrap components for shiny,
-            R package. Available from
+            "Bailey, E. (2022). shinyBS: Twitter bootstrap components for shiny.
+            (v 0.61.1). [R package]. Available from 
             https://CRAN.R-project.org/package=shinyBS"
           ),
           p(     #Boast Utilities
             class = "hangingindent",
-            "Carey, R. (2019), boastUtils: BOAST Utilities, R Package.
-            Available from
+            "Carey, R. and Hatfield, N. (2023). boastUtils: BOAST Utilities. 
+            (v 0.1.11.3). [R Package]. Available from
             https://github.com/EducationShinyAppTeam/boastUtils"
           ),
           p(     #shinydashboard
             class = "hangingindent",
-            "Chang, W. and Borges Ribeio, B. (2018), shinydashboard: Create
-            dashboards with 'Shiny', R Package. Available from
+            "Chang, W. and Borges Ribeio, B. (2021). shinydashboard: Create
+            dashboards with 'Shiny'. (v 0.7.2). [R Package]. Available from
             https://CRAN.R-project.org/package=shinydashboard"
           ),
           p(     #shiny
             class = "hangingindent",
-            "Chang, W., Cheng, J., Allaire, J., Xie, Y., and McPherson, J.
-            (2019), shiny: Web application framework for R, R Package.
+            "Chang, W., Cheng, J., Allaire, J., Sievert, C., Schloerke, B.,
+            Xie, Y., Allen, J., McPherson, J., Dipert, A., and Borges, B. (2023).
+            shiny: Web application framework for R, R Package. (v 1.7.5). [R Package].
             Available from https://CRAN.R-project.org/package=shiny"
           ),
           p(     #shinyWidgets
             class = "hangingindent",
-            "Perrier, V., Meyer, F., Granjon, D., Fellows, I., and Davis, W.
-            (2020), shinyWidgets: Custom Inputs Widgets for Shiny, R package.
-            Available from
+            "Perrier, V., Meyer, F., and Granjon, D. (2023), shinyWidgets: Custom
+            Inputs Widgets for Shiny. (v 0.7.6). [R package]. Available from
             https://cran.r-project.org/web/packages/shinyWidgets/index.html"
           ),
           p(     #reference for ideas
@@ -362,17 +398,14 @@ ui <- list(
           ),
           p( # ggplot2
             class = "hangingindent",
-            "Wickham, H., Chang, W., Henry, L., Pedersen, T.L., Takahashi, K.,
-            Wilke, C, Woo, K., Yutani, H., and Dunnington, D. (2020),
-            ggplot2: Create Elegant Data Visualisations Using the
-            Grammar of Graphics, R Package. Available from
-            https://cran.r-project.org/web/packages/ggplot2/index.html"
+            "Wickham, H. (2016). ggplot2: Elegant graphics for data analysis.
+            (v3.4.3). [R Package]. New York:Springer-Verlag. Available from
+            https://ggplot2.tidyverse.org"
           ),
           p( # DT
             class = "hangingindent",
-            "Xie, Y., Cheng, J., Tan, X., Allaire, J., Girlich, M., Ellis, G.F.,
-            and Rauh, J. (2020), DT: A Wrapper of the JavaScript Library
-            'DataTables', R Package. Available from
+            "Xie, Y., Cheng, J., and Tan, X. (2023). DT: A Wrapper of the 
+            JavaScript Library 'DataTables'. (v 0.28). [R Package]. Available from
             https://cran.r-project.org/web/packages/DT/index.html"
           ),
           br(),
@@ -399,18 +432,7 @@ server <- function(session, input, output) {
       )
     }
   )
-  ## Explore Button ----
-  observeEvent(
-    eventExpr = input$goToExplore,
-    handlerExpr = {
-      updateTabItems(
-        session = session, 
-        inputId = "pages",
-        selected = "explore"
-      )
-    }
-  )
-  
+
   ## Info Button  ----
   observeEvent(
     eventExpr = input$info,
@@ -543,18 +565,20 @@ server <- function(session, input, output) {
               size = 9
             ) + 
             theme(
-              plot.title = element_text(hjust = 0.5),  # move title to center
               panel.background = element_blank(),  # remove background
-              axis.line = element_line(colour = boastUtils::boastPalette[5]),  # make axis line black
+              plot.title = element_text(hjust = 0.5),  # move title to center
               plot.caption = element_text(size = 18),  # change the text size
+              plot.margin = margin(l = 75, unit = "pt"),
               text = element_text(size = 18), # change the text size
               axis.text.x = element_text(size = 18),
-              legend.position = "bottom",
+              axis.line.x = element_line(colour = "black"),  # make axis line black
               axis.text.y = element_blank(),
-              axis.ticks.y = element_blank()
+              axis.ticks.y = element_blank(),
+              axis.line.y = element_blank(),
+              legend.position = "bottom"
             ) +
             scale_color_manual(
-              name = "statistics",
+              name = "Statistics",
               values = c(
                 mean = boastUtils::psuPalette[2], 
                 median = boastUtils::psuPalette[1]
@@ -573,7 +597,8 @@ server <- function(session, input, output) {
           ) +
             geom_histogram(
               binwidth = 1, 
-              boundary = 0, 
+              boundary = 0,
+              closed = "left",
               col = boastUtils::boastPalette[5],
               fill = boastUtils::boastPalette[6]
             ) +
@@ -608,8 +633,8 @@ server <- function(session, input, output) {
               )
             ) +
             theme(
-              plot.title = element_text(hjust = 0.5), # move title to center
               panel.background = element_blank(), # remove background
+              plot.title = element_text(hjust = 0.5), # move title to center
               axis.line = element_line(colour = boastUtils::boastPalette[5]), # make axis line black
               plot.caption = element_text(size = 18), # change the text size
               text = element_text(size = 18), # change the text size
@@ -623,13 +648,13 @@ server <- function(session, input, output) {
       ### Mean, SD, and IQR Data Table----
       output$descStat <- DT::renderDT(
         expr = {
-          df1 <- data.frame(
+          data.frame(
             Mean = round(mean(dataSet()), digits = 1),
             SD = round(sd(dataSet()), digits = 1),
             IQR = (round(quantile(dataSet(), 0.75), digits = 1) - round(quantile(dataSet(), 0.25), digits = 1))
           )
         },
-        style = "bootstrap4",  # You must use this style
+        style = "bootstrap4", 
         rownames = FALSE,
         options = list(
           responsive = TRUE,
@@ -647,7 +672,7 @@ server <- function(session, input, output) {
       ### 5 Number Summary Data Table ----
       output$fiveNumSum <- DT::renderDT(
         expr = {
-          df2 <- data.frame(
+          data.frame(
             Min = round(min(dataSet()), digits = 1),
             Q1 = round(quantile(dataSet(), 0.25), digits = 1),
             Median = round(median(dataSet()), digits = 1),
@@ -655,7 +680,8 @@ server <- function(session, input, output) {
             Max = round(max(dataSet()), digits = 1)
           )
         },
-        style = "bootstrap4",  # You must use this style
+        style = "bootstrap4",
+        caption = "Five Number Summary",
         rownames = FALSE,
         options = list(
           responsive = TRUE,

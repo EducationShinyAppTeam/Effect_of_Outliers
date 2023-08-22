@@ -1,36 +1,6 @@
 # Things Needed for This Version
-
-1. Add screenshot ✓
-2. Add/Fix description/README/CODEOWNERS/.lintr files ✓
-3. Add docs folder. ✓
-4. Add Cite this app as entry. ✓
-5. Fix ggplot linewidth argument ✓
-6. Use boastUtils palettes ✓
-7. Update code to utilize the alt argument. ✓
-8. Update description aut and ctrb ✓
-9. Add Prerequisites Page ✓
-10. Fix prereqs(Add IQR, use bullet points instead of small boxes). ✓
-11. Add pictures(Prereqs) ✓
-12. Split the number summary into two tables. ✓
-13. Update outline ✓
-14. update alt
+1.
 
 
 # Ideas for Future Development
-
-1. Make more detailed instructions.
-
-2. If possible:
-Maybe slow or delay the automatic slider in response to feedback: "The outlier, 
-it moves too fast to show any changes, it needs more delay so the summary 
-statistics and graphs can update and show the user the changes." 
-- robchapp ✓
-
-3. Add little paragraph below the heading of the Explore page and maybe a well 
-panel in response to feedback: "I think it would be beneficial to add some sort 
-of text description to the explore page because there are a lot of visuals and 
-things to adjust (potentially a wellPanel to the sliders to help visually)." 
-- tarynmch ✓
-
-4. Add to the overview page in reponse to feedback: "The overview page could use 
-more information/instructions about the app." -sv101 ✓
+-
